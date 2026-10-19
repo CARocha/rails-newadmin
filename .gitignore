@@ -1,0 +1,15 @@
+/.bundle/
+/vendor/bundle/
+/node_modules/
+/pkg/
+/coverage/
+/tmp/
+/log/
+/test/dummy/tmp/
+/test/dummy/log/
+/test/dummy/db/*.sqlite3*
+/docs/_build/
+/.superpowers/
+.env*
+*.gem
+__pycache__/
