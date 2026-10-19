@@ -1,0 +1,9 @@
+<section class="newadmin-login">
+  <h1><%= t("rails_newadmin.recovery.title") %></h1>
+  <%= form_with url: password_path do |form| %>
+    <%= form.label :email_address, t("rails_newadmin.auth.email") %>
+    <%= form.email_field :email_address, required: true, autocomplete: "email", autofocus: true %>
+    <%= form.submit t("rails_newadmin.recovery.submit") %>
+  <% end %>
+  <%= link_to t("rails_newadmin.auth.submit"), new_session_path %>
+</section>

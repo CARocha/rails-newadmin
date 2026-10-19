@@ -1,2 +1,8 @@
-<h1><%= t("rails_newadmin.dashboard.title") %></h1>
-<p><%= t("rails_newadmin.dashboard.empty") %></p>
+<div class="newadmin-page-heading"><div><p class="newadmin-eyebrow"><%= admin_config.site_title %></p><h1><%= t("rails_newadmin.dashboard.title") %></h1></div></div>
+<% if @resources.empty? %><section class="newadmin-panel"><p><%= t("rails_newadmin.dashboard.empty") %></p></section><% end %>
+<div class="newadmin-resource-grid"><% @resources.each do |resource| %>
+  <%= link_to resource_records_path(resource.resource_key), class: "newadmin-panel newadmin-resource-card" do %>
+    <h2><%= resource.model_class.model_name.human(count: 2) %></h2>
+    <span><%= t("rails_newadmin.crud.view") %> →</span>
+  <% end %>
+<% end %></div>

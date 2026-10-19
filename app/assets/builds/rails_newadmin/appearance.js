@@ -1,0 +1,1 @@
+(()=>{var o=new Set(["light","dark","auto"]),n=(e,a="auto")=>o.has(e)?e:o.has(a)?a:"auto";function r(e=document.documentElement,a=window.localStorage){let t=e.dataset.theme;try{t=n(a.getItem("rails-newadmin.theme"),t)}catch{t=n(t)}return e.dataset.theme=t,t}try{r()}catch{}})();

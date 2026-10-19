@@ -7,4 +7,5 @@
     <%= form.password_field :password, required: true, autocomplete: "current-password", maxlength: 72 %>
     <%= form.submit t("rails_newadmin.auth.submit") %>
   <% end %>
+  <%= link_to t("rails_newadmin.recovery.title"), new_password_path %>
 </section>

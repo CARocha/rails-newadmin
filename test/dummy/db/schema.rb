@@ -10,7 +10,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_18_000002) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_18_010000) do
+  create_table "admin_profiles", force: :cascade do |t|
+    t.integer "organization_id", null: false
+    t.integer "admin_user_id", null: false
+    t.index ["admin_user_id"], name: "index_admin_profiles_on_admin_user_id"
+    t.index ["admin_user_id"], name: "unique_admin_profile", unique: true
+    t.index ["organization_id"], name: "index_admin_profiles_on_organization_id"
+  end
+
+  create_table "articles", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "body"
+    t.string "status", default: "draft", null: false
+    t.string "secret_token"
+    t.integer "lock_version", default: 0, null: false
+    t.integer "organization_id", null: false
+    t.integer "category_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_articles_on_category_id"
+    t.index ["organization_id"], name: "index_articles_on_organization_id"
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "organization_id", null: false
+    t.index ["organization_id"], name: "index_categories_on_organization_id"
+  end
+
+  create_table "organizations", force: :cascade do |t|
+    t.string "name", null: false
+  end
+
   create_table "rails_newadmin_admin_sessions", force: :cascade do |t|
     t.integer "admin_user_id", null: false
     t.string "token_digest", null: false
@@ -64,6 +96,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_18_000002) do
     t.index ["resource_key", "action"], name: "index_rails_newadmin_permissions_on_resource_key_and_action", unique: true
   end
 
+  add_foreign_key "admin_profiles", "organizations"
+  add_foreign_key "admin_profiles", "rails_newadmin_admin_users", column: "admin_user_id"
+  add_foreign_key "articles", "categories"
+  add_foreign_key "articles", "organizations"
+  add_foreign_key "categories", "organizations"
   add_foreign_key "rails_newadmin_admin_sessions", "rails_newadmin_admin_users", column: "admin_user_id"
   add_foreign_key "rails_newadmin_group_permissions", "rails_newadmin_groups", column: "group_id"
   add_foreign_key "rails_newadmin_group_permissions", "rails_newadmin_permissions", column: "permission_id"

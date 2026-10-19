@@ -1,0 +1,5 @@
+NewAdmin visual tokens and selected design sources originate from django-newadmin,
+copyright 2026 CARocha and contributors, BSD-3-Clause.
+
+Bootstrap and Bootstrap Icons are MIT licensed. Stimulus and Turbo are MIT licensed.
+Packaged third-party notices are in vendor/licenses. Assets are served locally.

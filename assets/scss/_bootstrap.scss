@@ -1,0 +1,25 @@
+// Selected Bootstrap components matching the NewAdmin family.
+$primary: #0066cc;
+$success: #166534;
+$info: #075ea8;
+$warning: #7a4b00;
+$danger: #b42318;
+$enable-gradients: false;
+$enable-shadows: false;
+$enable-transitions: true;
+
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/grid";
+@import "bootstrap/scss/buttons";
+@import "bootstrap/scss/card";
+@import "bootstrap/scss/alert";
+@import "bootstrap/scss/nav";
+@import "bootstrap/scss/badge";
+@import "bootstrap/scss/utilities/api";

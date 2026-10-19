@@ -7,13 +7,40 @@
     <title><%= admin_config.site_title %></title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= javascript_include_tag "rails_newadmin/appearance", nonce: true, data: { turbo_track: "reload" } %>
+    <%= stylesheet_link_tag "rails_newadmin/application", data: { turbo_track: "reload" } %>
+    <%= javascript_include_tag "rails_newadmin/application", defer: true, nonce: true, data: { turbo_track: "reload" } %>
   </head>
-  <body class="newadmin-theme">
+  <body class="newadmin-theme" data-controller="newadmin-theme newadmin-nav" data-action="keydown@window->newadmin-nav#close" data-newadmin-mount="<%= request.script_name %>">
     <a href="#main-content" class="skip-link"><%= t("rails_newadmin.skip") %></a>
-    <header class="newadmin-header"><%= admin_config.site_title %></header>
-    <main id="main-content" tabindex="-1">
-      <% flash.each do |type, message| %><p role="<%= type == "alert" ? "alert" : "status" %>"><%= message %></p><% end %>
-      <%= yield %>
-    </main>
+    <header class="newadmin-header">
+      <%= link_to admin_config.site_title, root_path, class: "newadmin-brand" %>
+      <span class="newadmin-header-context"><%= t("rails_newadmin.dashboard.title") %></span>
+      <div class="newadmin-tools">
+        <% if current_actor %><button type="button" class="newadmin-icon-button newadmin-mobile-toggle" data-action="newadmin-nav#toggle" data-newadmin-nav-target="toggle" aria-controls="newadmin-sidebar" aria-expanded="false" aria-label="<%= t("rails_newadmin.open_menu") %>">☰</button><% end %>
+        <button type="button" class="newadmin-icon-button" data-action="newadmin-theme#toggle" aria-label="<%= t("rails_newadmin.appearance") %>">◐</button>
+        <nav aria-label="<%= t("rails_newadmin.language") %>"><%= link_to "ES", url_for(locale: :es), lang: "es" %> · <%= link_to "EN", url_for(locale: :en), lang: "en" %></nav>
+        <% if current_actor %><%= button_to t("rails_newadmin.logout"), session_path, method: :delete, class: "btn btn-secondary" %><% end %>
+      </div>
+    </header>
+    <div class="<%= current_actor ? "newadmin-shell" : "newadmin-login-wrap" %>">
+      <% if current_actor %>
+        <aside class="newadmin-sidebar" id="newadmin-sidebar" data-newadmin-nav-target="panel">
+          <p class="newadmin-eyebrow"><%= t("rails_newadmin.crud.resources") %></p>
+          <nav aria-label="<%= t("rails_newadmin.navigation") %>">
+            <%= link_to t("rails_newadmin.dashboard.title"), root_path, aria: { current: controller_name == "dashboard" ? "page" : nil } %>
+            <% RailsNewadmin.registry.each do |resource| %>
+              <% if RailsNewadmin::Access.new(current_actor, resource).allowed?(:view) %>
+                <%= link_to resource.model_class.model_name.human(count: 2), resource_records_path(resource.resource_key), aria: { current: params[:resource_key] == resource.resource_key ? "page" : nil } %>
+              <% end %>
+            <% end %>
+          </nav>
+        </aside>
+      <% end %>
+      <main id="main-content" class="<%= "newadmin-main" if current_actor %>" tabindex="-1">
+        <% flash.each do |type, message| %><p class="newadmin-alert <%= "newadmin-alert-danger" if type == "alert" %>" role="<%= type == "alert" ? "alert" : "status" %>"><%= message %></p><% end %>
+        <%= yield %>
+      </main>
+    </div>
   </body>
 </html>

@@ -1,3 +1,4 @@
+---
 en:
   rails_newadmin:
     skip: Skip to content
@@ -10,3 +11,45 @@ en:
     dashboard:
       title: Administration
       empty: Authorized resources will appear here.
+    logout: Sign out
+    appearance: Change appearance
+    language: Language
+    navigation: Main navigation
+    open_menu: Open navigation
+    close_menu: Close navigation
+    crud:
+      resources: Resources
+      new: Create record
+      search: Search
+      filter: Filter
+      actions: Actions
+      view: View
+      edit: Edit
+      delete: Delete
+      empty: No matching records.
+      pagination: Pagination
+      previous: Previous
+      next: Next
+      save: Save changes
+      cancel: Cancel
+      saved: Changes saved.
+      deleted: Record deleted.
+      conflict: Someone else changed this record. Reload before saving.
+      invalid_relation: is not available to your account
+      delete_confirmation: This will delete the record. Review the information before
+        confirming.
+      results:
+        one: 1 result
+        other: "%{count} results"
+      search_relation: Search options
+      load_more: Load more options
+    recovery:
+      title: Reset password
+      submit: Send instructions
+      sent: If the account exists, instructions will be emailed.
+      updated: Your password was updated. Sign in again.
+      invalid: The link is invalid or has expired.
+      subject: Reset your NewAdmin password
+      email: Use this link to reset your password. It expires in 15 minutes.
+      confirm: Confirm password
+      save: Change password

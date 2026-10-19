@@ -6,6 +6,7 @@ module RailsNewadmin
     class_attribute :model_name, :resource_key, :policy_name, instance_accessor: false
     class_attribute :column_names, :field_names, :permitted_fields, :search_fields, :filter_fields,
       :preload_names, instance_accessor: false, default: [].freeze
+    class_attribute :relation_resources, instance_accessor: false, default: {}.freeze
 
     class << self
       def model(name)
@@ -23,6 +24,12 @@ module RailsNewadmin
 
       def policy(name)
         self.policy_name = constant_name!(name)
+      end
+
+      def relation(name, resource:)
+        field_list!([name])
+        raise ConfigurationError, "invalid related resource key" unless /\A[a-z][a-z0-9_]*\z/.match?(resource.to_s)
+        self.relation_resources = relation_resources.merge(name.to_sym => resource.to_s.freeze).freeze
       end
 
       { columns: :column_names, fields: :field_names, permit: :permitted_fields,

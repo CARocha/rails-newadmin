@@ -23,9 +23,10 @@ module RailsNewadmin
     end
 
     def with_admin_locale(&block)
-      requested = params[:locale].presence || current_actor&.locale || admin_config.default_locale
+      requested = params[:locale].presence || cookies[:rails_newadmin_locale].presence || current_actor&.locale || admin_config.default_locale
       locale = requested.to_s.to_sym
       locale = admin_config.default_locale unless admin_config.available_locales.include?(locale)
+      cookies[:rails_newadmin_locale] = { value: locale, same_site: :lax, path: request.script_name.presence || "/" } if params[:locale].present?
       I18n.with_locale(locale, &block)
     end
 

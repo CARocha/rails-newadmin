@@ -1,0 +1,28 @@
+es:
+  activerecord:
+    models:
+      article:
+        one: Artículo
+        other: Artículos
+      category:
+        one: Categoría
+        other: Categorías
+    attributes:
+      article:
+        id: ID
+        title: Título
+        body: Contenido
+        status: Estado
+        updated_at: Actualización
+        category_id: Categoría
+      category:
+        id: ID
+        name: Nombre
+    errors:
+      models:
+        article:
+          attributes:
+            title:
+              blank: no puede quedar vacío
+            status:
+              inclusion: no es un estado válido

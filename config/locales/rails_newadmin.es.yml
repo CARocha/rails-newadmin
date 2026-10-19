@@ -1,3 +1,4 @@
+---
 es:
   rails_newadmin:
     skip: Saltar al contenido
@@ -10,3 +11,45 @@ es:
     dashboard:
       title: Panel de administración
       empty: Los recursos autorizados aparecerán aquí.
+    logout: Cerrar sesión
+    appearance: Cambiar apariencia
+    language: Idioma
+    navigation: Navegación principal
+    open_menu: Abrir menú
+    close_menu: Cerrar menú
+    crud:
+      resources: Recursos
+      new: Crear registro
+      search: Buscar
+      filter: Filtrar
+      actions: Acciones
+      view: Ver
+      edit: Editar
+      delete: Eliminar
+      empty: No hay registros que coincidan.
+      pagination: Paginación
+      previous: Anterior
+      next: Siguiente
+      save: Guardar cambios
+      cancel: Cancelar
+      saved: Los cambios se guardaron.
+      deleted: El registro se eliminó.
+      conflict: Otra persona modificó este registro. Recarga antes de guardar.
+      invalid_relation: no está disponible para tu cuenta
+      delete_confirmation: Esta acción eliminará el registro. Revisa la información
+        antes de confirmar.
+      results:
+        one: 1 resultado
+        other: "%{count} resultados"
+      search_relation: Buscar opciones
+      load_more: Cargar más opciones
+    recovery:
+      title: Recuperar contraseña
+      submit: Enviar instrucciones
+      sent: Si la cuenta existe, recibirás instrucciones por correo.
+      updated: Tu contraseña se actualizó. Inicia sesión de nuevo.
+      invalid: El enlace no es válido o ha caducado.
+      subject: Recupera tu acceso a NewAdmin
+      email: Usa este enlace para cambiar tu contraseña. Caduca en 15 minutos.
+      confirm: Confirmar contraseña
+      save: Cambiar contraseña

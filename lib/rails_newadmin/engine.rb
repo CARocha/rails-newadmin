@@ -15,6 +15,10 @@ module RailsNewadmin
       app.paths.add "app/admin/resources", eager_load: true
     end
 
+    initializer "rails_newadmin.filter_credentials" do |app|
+      app.config.filter_parameters += [:password, :password_confirmation, :token]
+    end
+
     config.to_prepare do
       RailsNewadmin.configuration.validate!
       Dir[Rails.root.join("app/admin/resources/**/*.rb")].sort.each { |path| require_dependency path }

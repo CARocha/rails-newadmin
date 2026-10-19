@@ -1,0 +1,5 @@
+<div class="newadmin-page-heading"><h1><%= record_label(@record) %></h1><div class="newadmin-row-actions">
+  <% if @access.allowed?(:update, @record) %><%= link_to t("rails_newadmin.crud.edit"), edit_resource_record_path(@resource.resource_key, @record), class: "btn btn-primary" %><% end %>
+  <% if @access.allowed?(:destroy, @record) %><%= link_to t("rails_newadmin.crud.delete"), delete_resource_record_path(@resource.resource_key, @record), class: "btn btn-danger" %><% end %>
+</div></div>
+<section class="newadmin-panel"><dl class="newadmin-details"><% @resource.field_names.each do |field| %><dt><%= @record.class.human_attribute_name(field) %></dt><dd><%= @record.public_send(field) %></dd><% end %></dl></section>

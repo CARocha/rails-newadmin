@@ -9,4 +9,11 @@ class EngineTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal "Host application", response.body
   end
+
+  test "admin login loads only locally packaged assets" do
+    get "/admin/session/new"
+    assert_select "link[rel=stylesheet][href^='/assets/rails_newadmin/']"
+    assert_select "script[src^='/assets/rails_newadmin/']", minimum: 1
+    assert_no_match %r{https?://(?:cdn|fonts)}, response.body
+  end
 end

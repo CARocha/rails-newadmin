@@ -1,0 +1,37 @@
+<% if @record.errors.any? %><div class="newadmin-alert newadmin-alert-danger" role="alert"><ul><% @record.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul></div><% end %>
+<%= form_with scope: :record, url: @record.persisted? ? resource_record_path(@resource.resource_key, @record) : resource_records_path(@resource.resource_key), method: @record.persisted? ? :patch : :post do |form| %>
+  <% if @record.persisted? && @record.respond_to?(:lock_version) %><%= form.hidden_field :lock_version, value: @record.lock_version %><% end %>
+  <div class="newadmin-form-fields">
+    <% @resource.field_names.each do |field| %>
+      <% column = @record.class.columns_hash[field.to_s]; next unless column %>
+      <% editable = @access.permitted_attributes(@record.persisted? ? :update : :create, @record).include?(field) %>
+      <% errors = @record.errors[field]; error_id = "record_#{field}_error" %>
+      <div class="newadmin-field">
+        <%= form.label field, @record.class.human_attribute_name(field) %>
+        <% attrs = { value: @record.public_send(field), readonly: !editable, aria: { invalid: errors.any?, describedby: errors.any? ? error_id : nil } } %>
+        <% reflection = @record.class.reflect_on_all_associations(:belongs_to).find { |item| item.foreign_key == field.to_s } %>
+        <% if reflection && @resource.relation_resources.key?(reflection.name) %>
+          <div data-controller="newadmin-relation" data-newadmin-relation-url-value="<%= resource_options_path(@resource.resource_key, reflection.name) %>">
+            <label for="<%= "search_#{field}" %>"><%= t("rails_newadmin.crud.search_relation") %></label>
+            <input type="search" id="<%= "search_#{field}" %>" maxlength="200" data-newadmin-relation-target="search" data-action="input->newadmin-relation#search" autocomplete="off">
+            <%= form.select field, related_options(reflection, selected_id: @record.public_send(field)).map { |record| [record_label(record), record.id] }, { include_blank: true, selected: @record.public_send(field) }, { disabled: !editable, aria: attrs[:aria], data: { newadmin_relation_target: "select" } } %>
+            <button type="button" class="btn btn-secondary" data-action="newadmin-relation#more" data-newadmin-relation-target="more"><%= t("rails_newadmin.crud.load_more") %></button>
+            <span role="status" data-newadmin-relation-target="status"></span>
+          </div>
+        <% elsif column.type == :text %>
+          <%= form.text_area field, **attrs.merge(rows: 8) %>
+        <% elsif column.type == :boolean %>
+          <%= form.check_box field, disabled: !editable, checked: @record.public_send(field), aria: attrs[:aria] %>
+        <% elsif column.type == :date %>
+          <%= form.date_field field, **attrs %>
+        <% elsif [:integer, :decimal, :float].include?(column.type) %>
+          <%= form.number_field field, **attrs.merge(step: :any) %>
+        <% else %>
+          <%= form.text_field field, **attrs %>
+        <% end %>
+        <% if errors.any? %><p class="newadmin-field-error" id="<%= error_id %>"><%= errors.to_sentence %></p><% end %>
+      </div>
+    <% end %>
+  </div>
+  <div class="newadmin-form-actions"><%= form.submit t("rails_newadmin.crud.save"), class: "btn btn-primary" %><%= link_to t("rails_newadmin.crud.cancel"), resource_records_path(@resource.resource_key), class: "btn btn-secondary" %></div>
+<% end %>

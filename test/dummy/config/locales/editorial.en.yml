@@ -1,0 +1,9 @@
+en:
+  activerecord:
+    models:
+      article:
+        one: Article
+        other: Articles
+      category:
+        one: Category
+        other: Categories

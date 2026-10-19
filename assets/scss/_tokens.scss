@@ -1,0 +1,95 @@
+// Ported from django-newadmin dcf1cfe, BSD-3-Clause.
+:root, html[data-theme="light"] {
+
+  color-scheme: light;
+
+  --newadmin-canvas: #f8f9ff;
+  --newadmin-surface: #ffffff;
+  --newadmin-surface-raised: #eff4ff;
+  --newadmin-text: #0b1c30;
+  --newadmin-text-muted: #536172;
+  --newadmin-border: #dfe6f0;
+  --newadmin-control-border: #858b93;
+  --newadmin-primary: #141a23;
+  --newadmin-primary-hover: #334259;
+  --newadmin-on-primary: #ffffff;
+  --newadmin-chart-primary: #344760;
+  --newadmin-chart-secondary: #487f70;
+  --newadmin-chart-tertiary: #9b7849;
+  --newadmin-sidebar-active: #344760;
+  --newadmin-sidebar: #eff4ff;
+  --newadmin-sidebar-text: #26364b;
+  --newadmin-sidebar-muted: #536172;
+  --newadmin-success: #166534;
+  --newadmin-success-bg: #edf8f0;
+  --newadmin-warning: #7a4b00;
+  --newadmin-warning-bg: #fff8e6;
+  --newadmin-danger: #b42318;
+  --newadmin-danger-bg: #fff2f0;
+  --newadmin-info: #075ea8;
+  --newadmin-info-bg: #edf6ff;
+
+}
+html[data-theme="dark"] {
+
+  color-scheme: dark;
+
+  --newadmin-canvas: #11161d;
+  --newadmin-surface: #1d2734;
+  --newadmin-surface-raised: #243244;
+  --newadmin-text: #eaf0f8;
+  --newadmin-text-muted: #b2c0d2;
+  --newadmin-border: #354359;
+  --newadmin-control-border: #7c8795;
+  --newadmin-primary: #eaf0f8;
+  --newadmin-primary-hover: #ffffff;
+  --newadmin-on-primary: #152032;
+  --newadmin-chart-primary: #a8bce0;
+  --newadmin-chart-secondary: #75c4ab;
+  --newadmin-chart-tertiary: #dab889;
+  --newadmin-sidebar-active: #a8bce0;
+  --newadmin-sidebar: #161e29;
+  --newadmin-sidebar-text: #dbe6f5;
+  --newadmin-sidebar-muted: #a1b2ca;
+  --newadmin-success: #8fdaa2;
+  --newadmin-success-bg: #193322;
+  --newadmin-warning: #f4d18c;
+  --newadmin-warning-bg: #362d1e;
+  --newadmin-danger: #ffb4a8;
+  --newadmin-danger-bg: #3a1f21;
+  --newadmin-info: #9acbff;
+  --newadmin-info-bg: #1b2d40;
+
+}
+@media(prefers-color-scheme: dark) { html[data-theme="auto"] {
+
+  color-scheme: dark;
+
+  --newadmin-canvas: #11161d;
+  --newadmin-surface: #1d2734;
+  --newadmin-surface-raised: #243244;
+  --newadmin-text: #eaf0f8;
+  --newadmin-text-muted: #b2c0d2;
+  --newadmin-border: #354359;
+  --newadmin-control-border: #7c8795;
+  --newadmin-primary: #eaf0f8;
+  --newadmin-primary-hover: #ffffff;
+  --newadmin-on-primary: #152032;
+  --newadmin-chart-primary: #a8bce0;
+  --newadmin-chart-secondary: #75c4ab;
+  --newadmin-chart-tertiary: #dab889;
+  --newadmin-sidebar-active: #a8bce0;
+  --newadmin-sidebar: #161e29;
+  --newadmin-sidebar-text: #dbe6f5;
+  --newadmin-sidebar-muted: #a1b2ca;
+  --newadmin-success: #8fdaa2;
+  --newadmin-success-bg: #193322;
+  --newadmin-warning: #f4d18c;
+  --newadmin-warning-bg: #362d1e;
+  --newadmin-danger: #ffb4a8;
+  --newadmin-danger-bg: #3a1f21;
+  --newadmin-info: #9acbff;
+  --newadmin-info-bg: #1b2d40;
+
+}
+}
