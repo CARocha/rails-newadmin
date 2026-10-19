@@ -1,0 +1,86 @@
+name: Quality
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        gemfile: [Gemfile, gemfiles/rails_8_0.gemfile]
+        database: [sqlite, postgres]
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: newadmin_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 10s
+          --health-timeout 5s --health-retries 5
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
+      RAILS_ENV: test
+      DATABASE_URL: ${{ matrix.database == 'postgres' && 'postgresql://postgres:postgres@127.0.0.1/newadmin_test' || format('sqlite3:{0}/tmp/matrix.sqlite3', github.workspace) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+      - run: mkdir -p tmp
+      - run: bundle exec rails db:migrate
+      - run: COVERAGE=1 bundle exec rake test
+      - run: bundle exec ruby scripts/check_security_coverage.rb
+      - if: matrix.database == 'postgres'
+        run: bundle exec ruby test/postgresql/concurrency_check.rb
+  source_and_assets:
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+    env:
+      NEWADMIN_REDIS_URL: redis://127.0.0.1:6379/0
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '26'
+          cache: npm
+      - run: bundle exec rubocop
+      - run: bundle exec bundler-audit check --update
+      - run: npm ci
+      - run: npm test
+      - run: npm audit --audit-level=high
+      - run: npm run build
+      - run: git diff --exit-code -- app/assets/builds
+      - run: RAILS_ENV=test bundle exec rails db:migrate
+      - run: RAILS_ENV=development bundle exec ruby test/development/reload_check.rb
+      - run: bundle exec ruby scripts/shared_rate_limit_check.rb
+      - run: bundle exec ruby scripts/packaged_smoke.rb
+  documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: docs/requirements.txt
+      - run: pip install -r docs/requirements.txt
+      - run: sphinx-build -n -W docs/es site/es
+      - run: sphinx-build -n -W docs/en site/en

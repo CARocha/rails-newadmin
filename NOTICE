@@ -5,4 +5,5 @@ Bootstrap and Bootstrap Icons are MIT licensed. Stimulus and Turbo are MIT licen
 Packaged third-party notices are in vendor/licenses. Assets are served locally.
 
 ECharts, zrender, d3 and tslib notices are included alongside their bundled code.
-ECharts and zrender use Apache-2.0; see vendor/licenses for the full terms.
+ECharts uses Apache-2.0; zrender and d3 use BSD-3-Clause; tslib uses 0BSD.
+See vendor/licenses for the full terms.

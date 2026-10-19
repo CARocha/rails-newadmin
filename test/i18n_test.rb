@@ -15,4 +15,16 @@ class I18nTest < ActiveSupport::TestCase
     end
     assert_equal locales.first, locales.last
   end
+  test "concurrent anonymous requests keep their locale isolated" do
+    initial = I18n.locale
+    results = %w[es en].map do |locale|
+      Thread.new do
+        session = ActionDispatch::Integration::Session.new(Rails.application)
+        session.get "/admin/session/new", params: { locale: locale }
+        [ locale, session.response.status, Nokogiri::HTML(session.response.body).at_css("html")["lang"] ]
+      end
+    end.map(&:value)
+    assert_equal [ [ "es", 200, "es" ], [ "en", 200, "en" ] ], results
+    assert_equal initial, I18n.locale
+  end
 end
