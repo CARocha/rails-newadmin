@@ -1,0 +1,24 @@
+# frozen_string_literal: true
+require "rails"
+require "rails/engine"
+require "active_record/railtie"
+require "action_controller/railtie"
+require "action_view/railtie"
+require "active_job/railtie"
+require "action_mailer/railtie"
+
+module RailsNewadmin
+  class Engine < ::Rails::Engine
+    isolate_namespace RailsNewadmin
+
+    initializer "rails_newadmin.resource_path", before: :set_autoload_paths do |app|
+      app.paths.add "app/admin/resources", eager_load: true
+    end
+
+    config.to_prepare do
+      RailsNewadmin.configuration.validate!
+      Dir[Rails.root.join("app/admin/resources/**/*.rb")].sort.each { |path| require_dependency path }
+      RailsNewadmin.registry = RailsNewadmin::Registry.new(RailsNewadmin::Resource.descendants.select(&:name))
+    end
+  end
+end

@@ -1,0 +1,10 @@
+<section class="newadmin-login">
+  <h1><%= t("rails_newadmin.auth.title") %></h1>
+  <%= form_with url: session_path do |form| %>
+    <%= form.label :email_address, t("rails_newadmin.auth.email") %>
+    <%= form.email_field :email_address, required: true, autocomplete: "username", autofocus: true, value: params[:email_address] %>
+    <%= form.label :password, t("rails_newadmin.auth.password") %>
+    <%= form.password_field :password, required: true, autocomplete: "current-password", maxlength: 72 %>
+    <%= form.submit t("rails_newadmin.auth.submit") %>
+  <% end %>
+</section>

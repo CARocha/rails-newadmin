@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>" data-theme="<%= admin_config.default_mode %>">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="turbo-cache-control" content="no-cache">
+    <title><%= admin_config.site_title %></title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+  </head>
+  <body class="newadmin-theme">
+    <a href="#main-content" class="skip-link"><%= t("rails_newadmin.skip") %></a>
+    <header class="newadmin-header"><%= admin_config.site_title %></header>
+    <main id="main-content" tabindex="-1">
+      <% flash.each do |type, message| %><p role="<%= type == "alert" ? "alert" : "status" %>"><%= message %></p><% end %>
+      <%= yield %>
+    </main>
+  </body>
+</html>

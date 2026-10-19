@@ -1,0 +1,12 @@
+en:
+  rails_newadmin:
+    skip: Skip to content
+    auth:
+      title: Welcome to NewAdmin
+      email: Email address
+      password: Password
+      submit: Sign in
+      invalid: Check your email and password.
+    dashboard:
+      title: Administration
+      empty: Authorized resources will appear here.
