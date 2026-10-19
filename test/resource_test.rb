@@ -26,6 +26,7 @@ class ResourceTest < ActiveSupport::TestCase
     assert_raises(RailsNewadmin::ConfigurationError) { RailsNewadmin::Configuration.new.tap { |c| c.default_mode = :invalid }.validate! }
     assert_raises(RailsNewadmin::ConfigurationError) { Class.new(RailsNewadmin::Resource).key("../users") }
     assert_raises(RailsNewadmin::ConfigurationError) { Class.new(RailsNewadmin::Resource).permit("title; DROP TABLE users") }
+    assert_raises(RailsNewadmin::ConfigurationError) { RailsNewadmin::Configuration.new.tap { |c| c.authentication = :host }.validate! }
   end
 
   test "configuration validation preserves host locale configuration" do

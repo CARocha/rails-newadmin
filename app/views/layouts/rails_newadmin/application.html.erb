@@ -10,6 +10,7 @@
     <%= javascript_include_tag "rails_newadmin/appearance", nonce: true, data: { turbo_track: "reload" } %>
     <%= stylesheet_link_tag "rails_newadmin/application", data: { turbo_track: "reload" } %>
     <%= javascript_include_tag "rails_newadmin/application", defer: true, nonce: true, data: { turbo_track: "reload" } %>
+    <%= yield :head %>
   </head>
   <body class="newadmin-theme" data-controller="newadmin-theme newadmin-nav" data-action="keydown@window->newadmin-nav#close" data-newadmin-mount="<%= request.script_name %>">
     <a href="#main-content" class="skip-link"><%= t("rails_newadmin.skip") %></a>

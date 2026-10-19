@@ -13,3 +13,6 @@
 .env*
 *.gem
 __pycache__/
+
+**/vendor/bundle/
+**/.bundle/

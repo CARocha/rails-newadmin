@@ -4,6 +4,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 const destination = "app/assets/builds/rails_newadmin";
 await mkdir(destination, { recursive: true });
 await build({ entryPoints: { application: "app/javascript/rails_newadmin/application.js", appearance: "app/javascript/rails_newadmin/appearance_entry.js" }, bundle: true, minify: true, format: "iife", outdir: destination, legalComments: "inline" });
+await build({ entryPoints: ["app/javascript/rails_newadmin/charts.js"], bundle: true, minify: true, format: "iife", outfile: `${destination}/charts.js`, legalComments: "inline" });
 const css = sass.compile("assets/scss/admin.scss", { loadPaths: ["node_modules"], style: "compressed", quietDeps: true, silenceDeprecations: ["import"] });
 await writeFile(`${destination}/application.css`, css.css);
 console.log("Built local NewAdmin CSS, appearance and Turbo/Stimulus bundles.");

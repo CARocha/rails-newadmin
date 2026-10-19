@@ -3,6 +3,7 @@ import { Application, Controller } from "@hotwired/stimulus";
 import { applyInitialTheme, nextMode } from "./appearance.js";
 
 const application = Application.start();
+window.RailsNewadmin = { application, Controller };
 application.register("newadmin-theme", class extends Controller {
   connect() { try { applyInitialTheme(); } catch {} }
   toggle() {

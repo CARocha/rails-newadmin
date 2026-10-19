@@ -1,4 +1,19 @@
 <div class="newadmin-page-heading"><div><p class="newadmin-eyebrow"><%= admin_config.site_title %></p><h1><%= t("rails_newadmin.dashboard.title") %></h1></div></div>
+<div class="newadmin-resource-grid"><% (@metrics + @dashboard_data[:metrics]).each do |metric| %>
+  <section class="newadmin-panel" data-resource="<%= metric[:key] %>"><h2><%= metric[:label] %></h2><p class="newadmin-metric-value"><%= metric[:value] %></p></section>
+<% end %></div>
+<% if @dashboard_data[:charts].any? %>
+  <% content_for :head do %><%= javascript_include_tag "rails_newadmin/charts", defer: true, nonce: true %><% end %>
+  <% @dashboard_data[:charts].each do |chart| %>
+    <section class="newadmin-panel" data-controller="newadmin-chart" data-newadmin-chart-spec-value="<%= chart.to_json %>">
+      <h2><%= chart[:title] %></h2>
+      <div class="newadmin-chart" role="img" aria-label="<%= chart[:title] %>" data-newadmin-chart-target="plot"></div>
+      <details><summary><%= t("rails_newadmin.dashboard.data") %></summary><table><caption><%= chart[:title] %></caption><thead><tr><% chart[:columns].each do |column| %><th scope="col"><%= column %></th><% end %></tr></thead><tbody>
+        <% chart[:rows].each do |row| %><tr><% row.each do |value| %><td><%= value %></td><% end %></tr><% end %>
+      </tbody></table></details>
+    </section>
+  <% end %>
+<% end %>
 <% if @resources.empty? %><section class="newadmin-panel"><p><%= t("rails_newadmin.dashboard.empty") %></p></section><% end %>
 <div class="newadmin-resource-grid"><% @resources.each do |resource| %>
   <%= link_to resource_records_path(resource.resource_key), class: "newadmin-panel newadmin-resource-card" do %>

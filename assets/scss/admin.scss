@@ -78,3 +78,8 @@ html[data-theme=dark] .newadmin-icon { filter: invert(1); }
 }
 @media(prefers-reduced-motion: reduce) { .newadmin-theme * { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
 @media(prefers-reduced-transparency: reduce), (forced-colors: active) { .newadmin-header { background: var(--newadmin-surface); backdrop-filter: none; } }
+.newadmin-metric-value { font-size: 2rem; font-weight: 700; margin: 0; font-variant-numeric: tabular-nums; }
+.newadmin-chart { min-height: 280px; width: 100%; }
+.newadmin-permissions { display: grid; gap: 1rem; margin-top: 1.5rem; }
+.newadmin-permissions fieldset { border: 1px solid var(--newadmin-border); padding: 1rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+.newadmin-permissions legend { font-size: .875rem; font-weight: 650; float: none; width: auto; padding: 0 .5rem; }

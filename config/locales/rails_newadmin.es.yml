@@ -11,6 +11,7 @@ es:
     dashboard:
       title: Panel de administración
       empty: Los recursos autorizados aparecerán aquí.
+      data: Ver datos del gráfico
     logout: Cerrar sesión
     appearance: Cambiar apariencia
     language: Idioma

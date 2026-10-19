@@ -11,6 +11,7 @@ en:
     dashboard:
       title: Administration
       empty: Authorized resources will appear here.
+      data: View chart data
     logout: Sign out
     appearance: Change appearance
     language: Language
