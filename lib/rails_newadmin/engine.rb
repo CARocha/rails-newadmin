@@ -24,5 +24,9 @@ module RailsNewadmin
       Dir[Rails.root.join("app/admin/resources/**/*.rb")].sort.each { |path| require_dependency path }
       RailsNewadmin.registry = RailsNewadmin::Registry.new(RailsNewadmin::Resource.descendants.select(&:name))
     end
+
+    config.after_initialize do
+      RailsNewadmin::RateLimitStore.validate_shared! if Rails.env.production?
+    end
   end
 end

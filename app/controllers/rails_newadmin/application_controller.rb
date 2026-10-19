@@ -6,6 +6,8 @@ module RailsNewadmin
     around_action :with_admin_locale
     before_action :secure_admin_response
     helper_method :current_actor, :admin_config
+    helper_method :can_manage_access?, :resource_access
+    rescue_from RailsNewadmin::AccessDenied, with: -> { head :forbidden }
 
     private
 
@@ -17,6 +19,12 @@ module RailsNewadmin
     end
 
     def current_actor = current_admin_session&.admin_user
+    def can_manage_access? = current_actor&.administrative? && (current_actor.superuser? || current_actor.has_permission?("admin_access", "manage_access"))
+
+    def resource_access(resource)
+      @request_permissions ||= current_actor.superuser? ? [] : current_actor.granted_permissions.pluck(:resource_key, :action).freeze
+      Access.new(current_actor, resource, permissions: @request_permissions)
+    end
 
     def require_admin
       redirect_to new_session_path unless current_actor

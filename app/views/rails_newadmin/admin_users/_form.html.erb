@@ -1,0 +1,14 @@
+<% if @user.errors.any? %><div class="newadmin-alert newadmin-alert-danger" role="alert"><%= @user.errors.full_messages.to_sentence %></div><% end %>
+<%= form_with scope: :admin_user, url: @user.persisted? ? admin_user_path(@user) : admin_users_path, method: @user.persisted? ? :patch : :post do |form| %>
+  <div class="newadmin-form-fields">
+    <div class="newadmin-field"><%= form.label :email_address, t("rails_newadmin.auth.email") %><%= form.email_field :email_address, value: @user.email_address, required: true, autocomplete: "off" %></div>
+    <div class="newadmin-field"><%= form.label :password, t("rails_newadmin.auth.password") %><%= form.password_field :password, minlength: 12, maxlength: 72, required: @user.new_record?, autocomplete: "new-password" %></div>
+    <div class="newadmin-field"><%= form.label :password_confirmation, t("rails_newadmin.recovery.confirm") %><%= form.password_field :password_confirmation, minlength: 12, maxlength: 72, required: @user.new_record?, autocomplete: "new-password" %></div>
+    <% [:active, :staff].each do |field| %><label><%= form.check_box field, checked: @user.public_send(field) %> <%= t("rails_newadmin.access.#{field}") %></label><% end %>
+    <% if current_actor.superuser? %><label><%= form.check_box :superuser, checked: @user.superuser? %> <%= t("rails_newadmin.access.superuser") %></label><% end %>
+    <fieldset><legend><%= t("rails_newadmin.access.groups") %></legend><%= hidden_field_tag "admin_user[group_ids][]", "" %>
+      <% @groups.each do |group| %><label><%= check_box_tag "admin_user[group_ids][]", group.id, @user.group_ids.include?(group.id), id: "membership_#{group.id}" %> <%= group.name %></label><% end %>
+    </fieldset>
+  </div>
+  <div class="newadmin-form-actions"><%= form.submit t("rails_newadmin.crud.save"), class: "btn btn-primary" %><%= link_to t("rails_newadmin.crud.cancel"), admin_users_path %></div>
+<% end %>

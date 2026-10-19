@@ -2,7 +2,7 @@ module RailsNewadmin
   class PasswordsController < ApplicationController
     skip_before_action :require_admin
     before_action :load_user, only: [:edit, :update]
-    rate_limit to: 10, within: 3.minutes, only: :create,
+    rate_limit to: 10, within: 3.minutes, only: :create, store: RateLimitStore.new,
       with: -> { render :new, status: :too_many_requests }
 
     def new; end

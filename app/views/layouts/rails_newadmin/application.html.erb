@@ -30,9 +30,13 @@
           <nav aria-label="<%= t("rails_newadmin.navigation") %>">
             <%= link_to t("rails_newadmin.dashboard.title"), root_path, aria: { current: controller_name == "dashboard" ? "page" : nil } %>
             <% RailsNewadmin.registry.each do |resource| %>
-              <% if RailsNewadmin::Access.new(current_actor, resource).allowed?(:view) %>
+              <% if resource_access(resource).allowed?(:view) %>
                 <%= link_to resource.model_class.model_name.human(count: 2), resource_records_path(resource.resource_key), aria: { current: params[:resource_key] == resource.resource_key ? "page" : nil } %>
               <% end %>
+            <% end %>
+            <% if can_manage_access? %>
+              <%= link_to t("rails_newadmin.access.users"), admin_users_path %>
+              <%= link_to t("rails_newadmin.access.groups"), groups_path %>
             <% end %>
           </nav>
         </aside>

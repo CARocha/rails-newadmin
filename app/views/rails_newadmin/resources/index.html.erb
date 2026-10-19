@@ -18,7 +18,7 @@
       <th scope="col"><%= t("rails_newadmin.crud.actions") %></th>
     </tr></thead><tbody>
       <% @records.each do |record| %><tr>
-        <% @resource.column_names.each do |field| %><td><%= record.public_send(field) %></td><% end %>
+        <% @resource.column_names.each do |field| %><td><%= record[field] %></td><% end %>
         <td class="newadmin-row-actions"><%= link_to t("rails_newadmin.crud.view"), resource_record_path(@resource.resource_key, record) %>
           <% if @access.allowed?(:update, record) %><%= link_to t("rails_newadmin.crud.edit"), edit_resource_record_path(@resource.resource_key, record) %><% end %>
         </td>

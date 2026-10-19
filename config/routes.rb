@@ -2,6 +2,8 @@ RailsNewadmin::Engine.routes.draw do
   root to: "dashboard#index"
   resource :session, only: [:new, :create, :destroy]
   resource :password, only: [:new, :create, :edit, :update]
+  resources :groups, except: [:show, :destroy]
+  resources :admin_users, except: [:show, :destroy]
   get "resources/:resource_key/options/:association", to: "resources#options", as: :resource_options
   get "resources/:resource_key", to: "resources#index", as: :resource_records
   post "resources/:resource_key", to: "resources#create"

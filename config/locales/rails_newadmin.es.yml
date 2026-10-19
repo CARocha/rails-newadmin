@@ -53,3 +53,43 @@ es:
       email: Usa este enlace para cambiar tu contraseña. Caduca en 15 minutos.
       confirm: Confirmar contraseña
       save: Cambiar contraseña
+    access:
+      users: Usuarios administrativos
+      groups: Grupos
+      name: Nombre
+      permissions: Permisos
+      active: Activo
+      staff: Acceso al administrador
+      superuser: Superusuario
+      'yes': Sí
+      'no': 'No'
+      last_superuser: Debe quedar al menos un superusuario activo.
+      invalid_permissions: Hay permisos desconocidos o inactivos.
+      history: Historial
+    permissions:
+      view: Ver
+      create: Crear
+      update: Editar
+      destroy: Eliminar
+      manage_access: Administrar accesos
+  activerecord:
+    attributes:
+      rails_newadmin/admin_user:
+        email_address: Correo electrónico
+        password: Contraseña
+        password_confirmation: Confirmación de contraseña
+      rails_newadmin/group:
+        name: Nombre
+    errors:
+      models:
+        rails_newadmin/admin_user:
+          blank: no puede quedar vacío
+          taken: ya está registrado
+          invalid: no es válido
+          too_short: debe tener al menos %{count} caracteres
+          too_long: es demasiado largo
+          confirmation: no coincide con %{attribute}
+          inclusion: no es válido
+        rails_newadmin/group:
+          blank: no puede quedar vacío
+          taken: ya está registrado

@@ -53,3 +53,22 @@ en:
       email: Use this link to reset your password. It expires in 15 minutes.
       confirm: Confirm password
       save: Change password
+    access:
+      users: Administrative users
+      groups: Groups
+      name: Name
+      permissions: Permissions
+      active: Active
+      staff: Admin access
+      superuser: Superuser
+      'yes': 'Yes'
+      'no': 'No'
+      last_superuser: At least one active superuser must remain.
+      invalid_permissions: Some permissions are unknown or inactive.
+      history: History
+    permissions:
+      view: View
+      create: Create
+      update: Update
+      destroy: Delete
+      manage_access: Manage access

@@ -14,7 +14,7 @@ module Dummy
     config.load_defaults 8.0
     config.eager_load = false
     config.enable_reloading = Rails.env.development?
-    config.secret_key_base = ENV.fetch("SECRET_KEY_BASE") { "test-only-" * 16 }
+    config.secret_key_base = Rails.env.production? ? ENV.fetch("SECRET_KEY_BASE") : ENV.fetch("SECRET_KEY_BASE", "test-only-" * 16)
     config.hosts = ["www.example.com", "127.0.0.1", "localhost"]
     config.action_mailer.delivery_method = :test
     config.action_mailer.default_url_options = { host: "www.example.com" }

@@ -2,6 +2,7 @@ require "test_helper"
 
 class AuthenticationTest < ActionDispatch::IntegrationTest
   def setup
+    Rails.cache.clear
     @user = RailsNewadmin::AdminUser.create!(email_address: "admin@example.test", password: "twelve words password", staff: true, superuser: true)
     get "/admin/session/new"
   end

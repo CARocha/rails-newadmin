@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module RailsNewadmin
   class ConfigurationError < StandardError; end
+  class AccessDenied < StandardError; end
 
   class Configuration
     attr_accessor :site_title, :default_mode, :default_locale, :available_locales,

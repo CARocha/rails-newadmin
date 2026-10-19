@@ -106,4 +106,21 @@ class CrudTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "select[name='record[category_id]'] option[selected][value='#{@category.id}']"
   end
+
+  test "listing more records does not add per-row permission queries" do
+    @user.update!(superuser: false)
+    group = RailsNewadmin::Group.create!(name: "Editors")
+    group.admin_users << @user
+    %w[view update].each { |action| group.permissions << RailsNewadmin::Permission.create!(resource_key: "articles", action: action) }
+    get "/admin/resources/articles"
+    count_queries = lambda do
+      queries = []
+      ActiveSupport::Notifications.subscribed(->(*args) { queries << args.last[:sql] unless args.last[:name] == "SCHEMA" }, "sql.active_record") { get "/admin/resources/articles", params: { per_page: 50 } }
+      queries.size
+    end
+    small = count_queries.call
+    30.times { |index| Article.create!(title: "Row #{index}", status: "draft", organization: @organization) }
+    large = count_queries.call
+    assert_operator large - small, :<=, 2
+  end
 end

@@ -30,7 +30,10 @@ module RailsNewadmin
     end
 
     def destroy
-      @record.destroy!
+      @record.class.transaction do
+        @record.destroy!
+        AuditEvent.record!(actor: current_actor, resource: @resource, action: :destroy, record: @record, request_id: request.request_id)
+      end
       redirect_to resource_records_path(@resource.resource_key), status: :see_other, notice: t("rails_newadmin.crud.deleted")
     rescue ActiveRecord::RecordNotDestroyed
       flash.now[:alert] = @record.errors.full_messages.to_sentence
@@ -47,7 +50,7 @@ module RailsNewadmin
 
     def load_resource
       @resource = RailsNewadmin.registry.fetch(params[:resource_key])
-      @access = Access.new(current_actor, @resource)
+      @access = resource_access(@resource)
     rescue KeyError
       raise ActiveRecord::RecordNotFound
     end
@@ -75,7 +78,15 @@ module RailsNewadmin
       if @record.persisted? && @record.respond_to?(:lock_version) && params[:record].key?(:lock_version)
         @record.lock_version = params[:record][:lock_version]
       end
-      if valid_relationships?(data) && @record.update(data)
+      saved = @record.class.transaction do
+        if valid_relationships?(data) && @record.update(data)
+          AuditEvent.record!(actor: current_actor, resource: @resource, action: action, record: @record, request_id: request.request_id)
+          true
+        else
+          false
+        end
+      end
+      if saved
         redirect_to resource_record_path(@resource.resource_key, @record), status: :see_other, notice: t("rails_newadmin.crud.saved")
       else
         @record.assign_attributes(data.except(*relationship_foreign_keys))
@@ -96,7 +107,7 @@ module RailsNewadmin
         next if id.blank?
         target_key = @resource.relation_resources[reflection.name]
         target_resource = target_key && RailsNewadmin.registry.fetch(target_key)
-        target_access = target_resource && Access.new(current_actor, target_resource)
+        target_access = target_resource && resource_access(target_resource)
         found = target_access&.allowed?(:view) && target_access.scope.where(target_resource.model_class.primary_key => id).first
         next if found && found.is_a?(reflection.klass) && target_access.allowed?(:view, found)
         @record.errors.add(reflection.foreign_key, t("rails_newadmin.crud.invalid_relation"))
@@ -107,7 +118,7 @@ module RailsNewadmin
     def related_options(reflection, selected_id: nil)
       target_resource = RailsNewadmin.registry.fetch(@resource.relation_resources.fetch(reflection.name))
       return [] unless target_resource.model_class == reflection.klass
-      target_access = Access.new(current_actor, target_resource)
+      target_access = resource_access(target_resource)
       return [] unless target_access.allowed?(:view)
       records = Query.new(target_access, { q: params[:q].to_s, page: params[:page], per_page: 20 }).records.to_a
       if selected_id.present? && records.none? { |record| record.id.to_s == selected_id.to_s }

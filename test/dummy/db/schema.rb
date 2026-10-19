@@ -66,6 +66,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_18_010000) do
     t.index ["email_address"], name: "index_rails_newadmin_admin_users_on_email_address", unique: true
   end
 
+  create_table "rails_newadmin_audit_events", force: :cascade do |t|
+    t.string "actor_type", null: false
+    t.string "actor_id", null: false
+    t.string "resource_key", null: false
+    t.string "record_id", null: false
+    t.string "action", null: false
+    t.string "request_id"
+    t.text "changed_fields", default: "[]", null: false
+    t.datetime "created_at", null: false
+    t.index ["resource_key", "record_id", "created_at"], name: "rails_newadmin_audit_resource"
+  end
+
   create_table "rails_newadmin_group_permissions", force: :cascade do |t|
     t.integer "group_id", null: false
     t.integer "permission_id", null: false

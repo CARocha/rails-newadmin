@@ -38,7 +38,9 @@ class AccessTest < ActiveSupport::TestCase
     registry = RailsNewadmin::Registry.new([@resource])
     2.times { RailsNewadmin::Permission.sync!(registry) }
     assert_equal 4, RailsNewadmin::Permission.where(resource_key: "articles", active: true).count
+    assert RailsNewadmin::Permission.exists?(resource_key: "admin_access", action: "manage_access", active: true)
     RailsNewadmin::Permission.sync!(RailsNewadmin::Registry.new)
-    assert_equal 0, RailsNewadmin::Permission.where(active: true).count
+    assert_equal 0, RailsNewadmin::Permission.where(resource_key: "articles", active: true).count
+    assert RailsNewadmin::Permission.exists?(resource_key: "admin_access", action: "manage_access", active: true)
   end
 end

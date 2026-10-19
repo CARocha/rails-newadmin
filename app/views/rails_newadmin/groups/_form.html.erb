@@ -1,0 +1,13 @@
+<% if @group.errors.any? %><div class="newadmin-alert newadmin-alert-danger" role="alert"><%= @group.errors.full_messages.to_sentence %></div><% end %>
+<%= form_with scope: :group, url: @group.persisted? ? group_path(@group) : groups_path, method: @group.persisted? ? :patch : :post do |form| %>
+  <div class="newadmin-field"><%= form.label :name, t("rails_newadmin.access.name") %><%= form.text_field :name, required: true, value: @group.name %></div>
+  <fieldset class="newadmin-permissions"><legend><%= t("rails_newadmin.access.permissions") %></legend>
+    <%= hidden_field_tag "group[permission_ids][]", "" %>
+    <% @permissions.group_by(&:resource_key).each do |key, permissions| %>
+      <fieldset><legend><%= key %></legend><% permissions.each do |permission| %>
+        <label><%= check_box_tag "group[permission_ids][]", permission.id, @group.permission_ids.include?(permission.id), id: "permission_#{permission.id}" %> <%= t("rails_newadmin.permissions.#{permission.action}") %></label>
+      <% end %></fieldset>
+    <% end %>
+  </fieldset>
+  <div class="newadmin-form-actions"><%= form.submit t("rails_newadmin.crud.save"), class: "btn btn-primary" %><%= link_to t("rails_newadmin.crud.cancel"), groups_path %></div>
+<% end %>

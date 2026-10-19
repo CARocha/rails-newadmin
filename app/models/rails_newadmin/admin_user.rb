@@ -13,9 +13,13 @@ module RailsNewadmin
     def administrative? = active? && staff?
 
     def has_permission?(resource_key, action)
+      granted_permissions.where(resource_key: resource_key, action: action).exists?
+    end
+
+    def granted_permissions
       Permission.joins("INNER JOIN rails_newadmin_group_permissions ON rails_newadmin_group_permissions.permission_id = rails_newadmin_permissions.id")
         .joins("INNER JOIN rails_newadmin_memberships ON rails_newadmin_memberships.group_id = rails_newadmin_group_permissions.group_id")
-        .where(rails_newadmin_memberships: { admin_user_id: id }, resource_key: resource_key, action: action, active: true).exists?
+        .where(rails_newadmin_memberships: { admin_user_id: id }, active: true)
     end
 
     private

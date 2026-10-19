@@ -8,10 +8,11 @@ module RailsNewadmin
     def self.sync!(registry = RailsNewadmin.registry)
       transaction do
         keys = registry.map(&:resource_key)
-        where.not(resource_key: keys).update_all(active: false)
+        where.not(resource_key: keys + ["admin_access"]).update_all(active: false)
         keys.each do |key|
           ACTIONS.each { |action| find_or_initialize_by(resource_key: key, action: action).update!(active: true) }
         end
+        find_or_initialize_by(resource_key: "admin_access", action: "manage_access").update!(active: true)
       end
     end
   end

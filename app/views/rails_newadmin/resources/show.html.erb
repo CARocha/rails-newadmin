@@ -2,4 +2,8 @@
   <% if @access.allowed?(:update, @record) %><%= link_to t("rails_newadmin.crud.edit"), edit_resource_record_path(@resource.resource_key, @record), class: "btn btn-primary" %><% end %>
   <% if @access.allowed?(:destroy, @record) %><%= link_to t("rails_newadmin.crud.delete"), delete_resource_record_path(@resource.resource_key, @record), class: "btn btn-danger" %><% end %>
 </div></div>
-<section class="newadmin-panel"><dl class="newadmin-details"><% @resource.field_names.each do |field| %><dt><%= @record.class.human_attribute_name(field) %></dt><dd><%= @record.public_send(field) %></dd><% end %></dl></section>
+<section class="newadmin-panel"><dl class="newadmin-details"><% @resource.field_names.each do |field| %><dt><%= @record.class.human_attribute_name(field) %></dt><dd><%= @record[field] %></dd><% end %></dl></section>
+<section class="newadmin-panel"><h2><%= t("rails_newadmin.access.history") %></h2><ol>
+<% RailsNewadmin::AuditEvent.where(resource_key: @resource.resource_key, record_id: @record.id.to_s).order(created_at: :desc).limit(50).each do |event| %>
+  <li><time datetime="<%= event.created_at.iso8601 %>"><%= event.created_at.strftime("%Y-%m-%d %H:%M") %></time> · <%= t("rails_newadmin.permissions.#{event.action}", default: event.action) %> · #<%= event.actor_id %></li>
+<% end %></ol></section>

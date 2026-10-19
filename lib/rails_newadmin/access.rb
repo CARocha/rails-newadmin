@@ -3,13 +3,16 @@ module RailsNewadmin
   class Access
     attr_reader :actor, :resource, :policy
 
-    def initialize(actor, resource)
+    def initialize(actor, resource, permissions: nil)
       @actor, @resource = actor, resource
+      @permissions = permissions
       @policy = (resource.policy_name || "RailsNewadmin::Policy").constantize.new(resource)
     end
 
     def granted?(action)
-      actor&.administrative? && (actor.superuser? || actor.has_permission?(resource.resource_key, action.to_s))
+      return false unless actor&.administrative?
+      return true if actor.superuser?
+      @permissions ? @permissions.include?([resource.resource_key, action.to_s]) : actor.has_permission?(resource.resource_key, action.to_s)
     end
 
     def allowed?(action, record = nil)

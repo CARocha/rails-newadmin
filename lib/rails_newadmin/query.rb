@@ -7,7 +7,7 @@ module RailsNewadmin
       @resource = access.resource
       @relation = access.scope
       @page = params[:page].to_s.to_i.clamp(1, 100_000)
-      @per_page = (params[:per_page].presence || 25).to_i.clamp(1, 100)
+      @per_page = (params[:per_page].presence || 25).to_s.to_i.clamp(1, 100)
       filter(params[:filters])
       search(params[:q])
       sort(params[:sort], params[:direction])

@@ -1,0 +1,4 @@
+<div class="newadmin-page-heading"><h1><%= t("rails_newadmin.access.groups") %></h1><%= link_to t("rails_newadmin.crud.new"), new_group_path, class: "btn btn-primary" %></div>
+<section class="newadmin-panel"><table><thead><tr><th scope="col"><%= t("rails_newadmin.access.name") %></th><th scope="col"><%= t("rails_newadmin.crud.actions") %></th></tr></thead><tbody>
+<% @groups.each do |group| %><tr><td><%= group.name %></td><td><%= link_to t("rails_newadmin.crud.edit"), edit_group_path(group) %></td></tr><% end %>
+</tbody></table></section>
