@@ -16,3 +16,7 @@ __pycache__/
 
 **/vendor/bundle/
 **/.bundle/
+
+/.yardoc/
+/site/
+/.venv-docs/

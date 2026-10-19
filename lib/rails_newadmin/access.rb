@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module RailsNewadmin
   class Access
     attr_reader :actor, :resource, :policy
@@ -12,7 +13,7 @@ module RailsNewadmin
     def granted?(action)
       return false unless actor&.administrative?
       return true if actor.superuser?
-      @permissions ? @permissions.include?([resource.resource_key, action.to_s]) : actor.has_permission?(resource.resource_key, action.to_s)
+      @permissions ? @permissions.include?([ resource.resource_key, action.to_s ]) : actor.has_permission?(resource.resource_key, action.to_s)
     end
 
     def allowed?(action, record = nil)

@@ -37,6 +37,7 @@ es:
       deleted: El registro se eliminó.
       conflict: Otra persona modificó este registro. Recarga antes de guardar.
       invalid_relation: no está disponible para tu cuenta
+      delete_restricted: No se puede borrar este registro porque tiene registros relacionados.
       delete_confirmation: Esta acción eliminará el registro. Revisa la información
         antes de confirmar.
       results:

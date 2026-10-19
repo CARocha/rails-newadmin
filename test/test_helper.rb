@@ -1,5 +1,6 @@
 ENV["RAILS_ENV"] = "test"
 require "bundler/setup"
+require_relative "support/coverage_setup" if ENV["COVERAGE"] == "1"
 require "rails/newadmin"
 require_relative "dummy/config/environment"
 require "rails/test_help"

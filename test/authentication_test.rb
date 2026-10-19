@@ -69,4 +69,31 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
     csrf_request :post, "/admin/session", params: { email_address: @user.email_address, password: "twelve words password", return_to: "https://example.test/steal" }
     assert_redirected_to "/admin/"
   end
+
+  test "signing in again replaces the old session and account locale persists across navigation" do
+    @user.update!(locale: "en")
+    login_admin(@user)
+    assert_select "html[lang=en]"
+    old_session = @user.sessions.sole.id
+    get "/admin/session/new"
+    csrf_request :post, "/admin/session", params: { email_address: @user.email_address, password: "twelve words password" }
+    assert_response :see_other
+    assert_equal 1, @user.sessions.count
+    refute_equal old_session, @user.sessions.sole.id
+  end
+
+  test "invalid missing expired and idle tokens remain unusable" do
+    assert_nil RailsNewadmin::AdminSession.resume(nil)
+    assert_nil RailsNewadmin::AdminSession.resume("x")
+    assert_nil RailsNewadmin::AdminSession.resume("x" * 50)
+    token = RailsNewadmin::AdminSession.start!(@user)
+    record = @user.sessions.sole
+    record.update!(last_seen_at: 2.minutes.ago)
+    assert RailsNewadmin::AdminSession.resume(token)
+    assert_operator record.reload.last_seen_at, :>, 1.minute.ago
+    record.update!(expires_at: 1.second.ago)
+    assert_nil RailsNewadmin::AdminSession.resume(token)
+    @user.update!(active: false)
+    assert_raises(ArgumentError) { RailsNewadmin::AdminSession.start!(@user) }
+  end
 end

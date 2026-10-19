@@ -25,7 +25,7 @@ class GeneratorsTest < ActiveSupport::TestCase
   test "resource generator defaults to denied access and explicit writable fields" do
     require "generators/rails_newadmin/resource/resource_generator"
     Dir.mktmpdir("newadmin-resource") do |directory|
-      RailsNewadmin::Generators::ResourceGenerator.start(["Article"], destination_root: directory, shell: Thor::Shell::Basic.new)
+      RailsNewadmin::Generators::ResourceGenerator.start([ "Article" ], destination_root: directory, shell: Thor::Shell::Basic.new)
       resource = File.read("#{directory}/app/admin/resources/article_resource.rb")
       policy = File.read("#{directory}/app/policies/article_admin_policy.rb")
       assert_includes resource, 'model "Article"'

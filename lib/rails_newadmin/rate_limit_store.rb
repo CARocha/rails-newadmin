@@ -1,10 +1,11 @@
 # frozen_string_literal: true
+
 module RailsNewadmin
   class RateLimitStore
     def self.backend = RailsNewadmin.configuration.rate_limit_store || Rails.cache
 
     def self.validate_shared!(store = backend)
-      local_classes = [ActiveSupport::Cache::MemoryStore, ActiveSupport::Cache::NullStore, ActiveSupport::Cache::FileStore]
+      local_classes = [ ActiveSupport::Cache::MemoryStore, ActiveSupport::Cache::NullStore, ActiveSupport::Cache::FileStore ]
       if !store.respond_to?(:increment) || local_classes.any? { |klass| store.is_a?(klass) }
         raise ConfigurationError, "Configure a shared atomic rate_limit_store (for example RedisCacheStore) before production."
       end

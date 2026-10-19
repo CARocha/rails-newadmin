@@ -44,6 +44,7 @@ class CrudTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert_select "[role=alert]"
     assert_select "input[name='record[title]'][aria-invalid=true]"
+    refute_match(/translation missing/i, response.body)
   end
 
   test "viewer cannot write by sending a request directly" do
@@ -77,7 +78,7 @@ class CrudTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert Article.exists?(@article.id)
     get "/admin/resources/articles/#{@article.id}/delete"
-    csrf_request :delete, "/admin/resources/articles/#{@article.id}"
+    csrf_request :delete, "/admin/resources/articles/#{@article.id}", params: { lock_version: @article.lock_version }
     assert_response :see_other
     refute Article.exists?(@article.id)
   end
@@ -122,5 +123,40 @@ class CrudTest < ActionDispatch::IntegrationTest
     30.times { |index| Article.create!(title: "Row #{index}", status: "draft", organization: @organization) }
     large = count_queries.call
     assert_operator large - small, :<=, 2
+  end
+  test "pagination preserves allowlisted filters sorting and page size" do
+    Article.create!(title: "Second draft", status: "draft", organization: @organization)
+    get "/admin/resources/articles", params: { per_page: 1, sort: "title", direction: "desc", filters: { status: "draft" } }
+    assert_response :success
+    link = Nokogiri::HTML(response.body).at_css(".newadmin-pagination a")
+    query = Rack::Utils.parse_nested_query(URI.parse(link["href"]).query)
+    assert_equal "draft", query.dig("filters", "status")
+    assert_equal "1", query["per_page"]
+    assert_equal "title", query["sort"]
+    assert_equal "desc", query["direction"]
+  end
+  test "stale edit and delete confirmations preserve newer changes" do
+    get "/admin/resources/articles/#{@article.id}/edit"
+    old_version = @article.lock_version
+    @article.update!(title: "Newer edit")
+    csrf_request :patch, "/admin/resources/articles/#{@article.id}", params: { record: { title: "Stale edit", lock_version: old_version } }
+    assert_response :conflict
+    assert_equal "Newer edit", @article.reload.title
+    get "/admin/resources/articles/#{@article.id}/delete"
+    assert_select "input[name=lock_version]"
+    old_version = @article.lock_version
+    @article.update!(title: "Changed since confirmation")
+    csrf_request :delete, "/admin/resources/articles/#{@article.id}", params: { lock_version: old_version }
+    assert_response :conflict
+    assert_equal "Changed since confirmation", @article.reload.title
+  end
+  test "dependent records produce a readable delete restriction without an audit" do
+    get "/admin/resources/categories/#{@category.id}/delete"
+    count = RailsNewadmin::AuditEvent.count
+    csrf_request :delete, "/admin/resources/categories/#{@category.id}"
+    assert_response :unprocessable_entity
+    assert_select "[role=alert]"
+    assert Category.exists?(@category.id)
+    assert_equal count, RailsNewadmin::AuditEvent.count
   end
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module RailsNewadmin
   class AccessManagement
     class LastSuperuser < StandardError; end
@@ -10,13 +11,14 @@ module RailsNewadmin
 
     def update_user!(user, attributes)
       attributes = attributes.to_h.symbolize_keys
-      raise AccessDenied if !@actor.superuser? && (user.superuser? || attributes.key?(:superuser))
-      allowed = [:email_address, :password, :password_confirmation, :active, :staff, :superuser, :locale, :group_ids]
+      raise AccessDenied if !@actor.superuser? && attributes.key?(:superuser)
+      allowed = [ :email_address, :password, :password_confirmation, :active, :staff, :superuser, :locale, :group_ids ]
       raise ArgumentError, "unknown account fields" if (attributes.keys - allowed).any?
       AdminUser.transaction do
         # Stable lock ordering serializes concurrent attempts to remove the final owner.
         AdminUser.where(superuser: true).order(:id).lock.load
         user.lock! if user.persisted?
+        raise AccessDenied if !@actor.superuser? && user.superuser?
         user.assign_attributes(attributes.except(:group_ids))
         if user.persisted? && (!user.active? || !user.staff? || !user.superuser?) && AdminUser.where(active: true, staff: true, superuser: true).where.not(id: user.id).none?
           raise LastSuperuser, "At least one active superuser must remain"

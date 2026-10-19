@@ -13,7 +13,7 @@ class RateLimitTest < ActionDispatch::IntegrationTest
   end
 
   test "production rejects process-local and null limit stores" do
-    [ActiveSupport::Cache::MemoryStore.new, ActiveSupport::Cache::NullStore.new].each do |store|
+    [ ActiveSupport::Cache::MemoryStore.new, ActiveSupport::Cache::NullStore.new ].each do |store|
       assert_raises(RailsNewadmin::ConfigurationError) { RailsNewadmin::RateLimitStore.validate_shared!(store) }
     end
   end

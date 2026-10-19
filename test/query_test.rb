@@ -11,9 +11,9 @@ class QueryTest < ActiveSupport::TestCase
     query = RailsNewadmin::Query.new(access, { q: "%", per_page: 10_000, page: -1 })
     assert_equal 100, query.per_page
     assert_equal 1, query.page
-    assert_equal ["100% result"], query.records.pluck(:title)
+    assert_equal [ "100% result" ], query.records.pluck(:title)
     filtered = RailsNewadmin::Query.new(access, { filters: { "status" => "published" }, sort: "title", direction: "asc" })
-    assert_equal ["Other result"], filtered.records.pluck(:title)
+    assert_equal [ "Other result" ], filtered.records.pluck(:title)
     injected = RailsNewadmin::Query.new(access, { q: "' OR 1=1 --" })
     assert_empty injected.records
   end

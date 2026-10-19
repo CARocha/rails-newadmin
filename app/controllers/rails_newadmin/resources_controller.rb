@@ -2,9 +2,9 @@ module RailsNewadmin
   class ResourcesController < ApplicationController
     before_action :load_resource
     before_action :authorize_grant
-    before_action :load_record, only: [:show, :edit, :update, :delete, :destroy]
+    before_action :load_record, only: [ :show, :edit, :update, :delete, :destroy ]
     before_action :authorize_action
-    helper_method :resource_label, :record_label, :related_options
+    helper_method :resource_label, :record_label, :related_options, :pagination_parameters
 
     def index
       @query = Query.new(@access, params)
@@ -30,11 +30,21 @@ module RailsNewadmin
     end
 
     def destroy
+      if @record.class.locking_enabled?
+        @record.lock_version = params.require(:lock_version)
+      end
       @record.class.transaction do
         @record.destroy!
         AuditEvent.record!(actor: current_actor, resource: @resource, action: :destroy, record: @record, request_id: request.request_id)
       end
       redirect_to resource_records_path(@resource.resource_key), status: :see_other, notice: t("rails_newadmin.crud.deleted")
+    rescue ActiveRecord::StaleObjectError
+      @record.errors.add(:base, t("rails_newadmin.crud.conflict"))
+      flash.now[:alert] = @record.errors.full_messages.to_sentence
+      render :delete, status: :conflict
+    rescue ActiveRecord::DeleteRestrictionError, ActiveRecord::InvalidForeignKey
+      flash.now[:alert] = t("rails_newadmin.crud.delete_restricted")
+      render :delete, status: :unprocessable_entity
     rescue ActiveRecord::RecordNotDestroyed
       flash.now[:alert] = @record.errors.full_messages.to_sentence
       render :delete, status: :unprocessable_entity
@@ -128,10 +138,14 @@ module RailsNewadmin
       records
     end
 
+    def pagination_parameters
+      params.permit(:q, :sort, :direction, :per_page, filters: @resource.filter_fields).to_h.symbolize_keys
+    end
+
     def resource_label = @resource.model_class.model_name.human(count: 2)
 
     def record_label(record)
-      label_field = [:name, :title].find { |field| record.has_attribute?(field) }
+      label_field = [ :name, :title ].find { |field| record.has_attribute?(field) }
       label_field ? record.public_send(label_field).to_s : "#{record.class.model_name.human} ##{record.id}"
     end
   end

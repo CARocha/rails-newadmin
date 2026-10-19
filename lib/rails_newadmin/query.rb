@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module RailsNewadmin
   class Query
     attr_reader :relation, :page, :per_page

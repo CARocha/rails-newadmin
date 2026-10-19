@@ -1,6 +1,9 @@
 require "test_helper"
 
 class AccessTest < ActiveSupport::TestCase
+  class InvalidScopePolicy < RailsNewadmin::Policy
+    def scope(actor:, relation:) = []
+  end
   def setup
     @reader = RailsNewadmin::AdminUser.create!(email_address: "reader@example.test", password: "twelve words password", staff: true)
     @resource = Class.new(RailsNewadmin::Resource) do
@@ -32,15 +35,21 @@ class AccessTest < ActiveSupport::TestCase
     access = RailsNewadmin::Access.new(@reader, @resource)
     refute access.allowed?(:view)
     assert_empty access.policy.permitted_attributes(actor: @reader, action: :create, record: nil)
+    refute RailsNewadmin::Access.new(nil, @resource).granted?(:view)
   end
 
   test "permission synchronization is explicit idempotent and deactivates orphaned grants" do
-    registry = RailsNewadmin::Registry.new([@resource])
+    registry = RailsNewadmin::Registry.new([ @resource ])
     2.times { RailsNewadmin::Permission.sync!(registry) }
     assert_equal 4, RailsNewadmin::Permission.where(resource_key: "articles", active: true).count
     assert RailsNewadmin::Permission.exists?(resource_key: "admin_access", action: "manage_access", active: true)
     RailsNewadmin::Permission.sync!(RailsNewadmin::Registry.new)
     assert_equal 0, RailsNewadmin::Permission.where(resource_key: "articles", active: true).count
     assert RailsNewadmin::Permission.exists?(resource_key: "admin_access", action: "manage_access", active: true)
+  end
+
+  test "an extension cannot substitute an array for a scoped relation" do
+    @resource.policy("AccessTest::InvalidScopePolicy")
+    assert_raises(RailsNewadmin::ConfigurationError) { RailsNewadmin::Access.new(@reader, @resource).scope }
   end
 end

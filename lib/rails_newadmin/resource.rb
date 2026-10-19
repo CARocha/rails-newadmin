@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "active_support/core_ext/class/attribute"
 
 module RailsNewadmin
@@ -27,7 +28,7 @@ module RailsNewadmin
       end
 
       def relation(name, resource:)
-        field_list!([name])
+        field_list!([ name ])
         raise ConfigurationError, "invalid related resource key" unless /\A[a-z][a-z0-9_]*\z/.match?(resource.to_s)
         self.relation_resources = relation_resources.merge(name.to_sym => resource.to_s.freeze).freeze
       end

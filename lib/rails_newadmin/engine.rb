@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails"
 require "rails/engine"
 require "active_record/railtie"
@@ -16,13 +17,13 @@ module RailsNewadmin
     end
 
     initializer "rails_newadmin.filter_credentials" do |app|
-      app.config.filter_parameters += [:password, :password_confirmation, :token]
+      app.config.filter_parameters += [ :password, :password_confirmation, :token ]
     end
 
     config.to_prepare do
       RailsNewadmin.configuration.validate!
       Dir[Rails.root.join("app/admin/resources/**/*.rb")].sort.each { |path| require_dependency path }
-      RailsNewadmin.registry = RailsNewadmin::Registry.new(RailsNewadmin::Resource.descendants.select(&:name))
+      RailsNewadmin.registry = RailsNewadmin::Registry.new(RailsNewadmin::Resource.descendants.select { |klass| klass.name && klass.name.safe_constantize.equal?(klass) })
     end
 
     config.after_initialize do

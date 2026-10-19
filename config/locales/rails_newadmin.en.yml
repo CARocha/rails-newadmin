@@ -37,6 +37,7 @@ en:
       deleted: Record deleted.
       conflict: Someone else changed this record. Reload before saving.
       invalid_relation: is not available to your account
+      delete_restricted: This record cannot be deleted because other records depend on it.
       delete_confirmation: This will delete the record. Review the information before
         confirming.
       results:

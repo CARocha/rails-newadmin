@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module RailsNewadmin
   class Policy
     attr_reader :resource

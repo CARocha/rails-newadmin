@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module RailsNewadmin
   class DashboardProvider
     class_attribute :required_resources, instance_accessor: false, default: [].freeze

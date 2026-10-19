@@ -1,7 +1,7 @@
 module RailsNewadmin
   class PasswordsController < ApplicationController
     skip_before_action :require_admin
-    before_action :load_user, only: [:edit, :update]
+    before_action :load_user, only: [ :edit, :update ]
     rate_limit to: 10, within: 3.minutes, only: :create, store: RateLimitStore.new,
       with: -> { render :new, status: :too_many_requests }
 
@@ -21,7 +21,10 @@ module RailsNewadmin
     end
 
     def update
-      if @user.update(params.permit(:password, :password_confirmation))
+      if params[:password].blank?
+        @user.errors.add(:password, :blank)
+        render :edit, status: :unprocessable_entity
+      elsif @user.update(params.permit(:password, :password_confirmation))
         cookies.delete(:rails_newadmin_session, path: request.script_name.presence || "/")
         redirect_to new_session_path, status: :see_other, notice: t("rails_newadmin.recovery.updated")
       else

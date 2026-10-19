@@ -28,7 +28,7 @@
   </div>
   <nav class="newadmin-pagination" aria-label="<%= t("rails_newadmin.crud.pagination") %>">
     <span><%= t("rails_newadmin.crud.results", count: @total) %></span>
-    <% if @query.page > 1 %><%= link_to t("rails_newadmin.crud.previous"), resource_records_path(@resource.resource_key, page: @query.page - 1, q: params[:q]) %><% end %>
-    <% if @query.page * @query.per_page < @total %><%= link_to t("rails_newadmin.crud.next"), resource_records_path(@resource.resource_key, page: @query.page + 1, q: params[:q]) %><% end %>
+    <% if @query.page > 1 %><%= link_to t("rails_newadmin.crud.previous"), resource_records_path(@resource.resource_key, pagination_parameters.merge(page: @query.page - 1)) %><% end %>
+    <% if @query.page * @query.per_page < @total %><%= link_to t("rails_newadmin.crud.next"), resource_records_path(@resource.resource_key, pagination_parameters.merge(page: @query.page + 1)) %><% end %>
   </nav>
 </section>

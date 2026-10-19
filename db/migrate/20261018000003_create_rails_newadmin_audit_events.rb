@@ -10,6 +10,6 @@ class CreateRailsNewadminAuditEvents < ActiveRecord::Migration[8.0]
       t.text :changed_fields, null: false, default: "[]"
       t.datetime :created_at, null: false
     end
-    add_index :rails_newadmin_audit_events, [:resource_key, :record_id, :created_at], name: "rails_newadmin_audit_resource"
+    add_index :rails_newadmin_audit_events, [ :resource_key, :record_id, :created_at ], name: "rails_newadmin_audit_resource"
   end
 end
