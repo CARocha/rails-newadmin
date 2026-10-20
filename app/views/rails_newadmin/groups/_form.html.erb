@@ -1,6 +1,6 @@
-<% if @group.errors.any? %><div class="newadmin-alert newadmin-alert-danger" role="alert"><%= @group.errors.full_messages.to_sentence %></div><% end %>
+<%= render "rails_newadmin/shared/errors", record: @group, scope: :group, fields: [:name] %>
 <%= form_with scope: :group, url: @group.persisted? ? group_path(@group) : groups_path, method: @group.persisted? ? :patch : :post do |form| %>
-  <div class="newadmin-field"><%= form.label :name, t("rails_newadmin.access.name") %><%= form.text_field :name, required: true, value: @group.name %></div>
+  <div class="newadmin-field"><%= form.label :name, t("rails_newadmin.access.name") %><%= form.text_field :name, **field_error_attributes(@group, :name, scope: :group), required: true, value: @group.name %><%= render "rails_newadmin/shared/field_error", record: @group, field: :name, scope: :group %></div>
   <fieldset class="newadmin-permissions"><legend><%= t("rails_newadmin.access.permissions") %></legend>
     <%= hidden_field_tag "group[permission_ids][]", "" %>
     <% @permissions.group_by(&:resource_key).each do |key, permissions| %>

@@ -1,4 +1,4 @@
-<% if @record.errors.any? %><div class="newadmin-alert newadmin-alert-danger" role="alert"><ul><% @record.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul></div><% end %>
+<%= render "rails_newadmin/shared/errors", record: @record, scope: :record, fields: @resource.field_names %>
 <%= form_with scope: :record, url: @record.persisted? ? resource_record_path(@resource.resource_key, @record) : resource_records_path(@resource.resource_key), method: @record.persisted? ? :patch : :post do |form| %>
   <% if @record.persisted? && @record.respond_to?(:lock_version) %><%= form.hidden_field :lock_version, value: @record.lock_version %><% end %>
   <div class="newadmin-form-fields">

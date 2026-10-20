@@ -1,6 +1,14 @@
 ---
 en:
   rails_newadmin:
+    appearance_modes:
+      auto: Automatic
+      light: Light
+      dark: Dark
+    denied:
+      title: Access denied
+      description: Your account does not have permission to access this page. Contact your administrator if you need access.
+    form_errors: Please correct the following errors
     skip: Skip to content
     auth:
       title: Welcome to NewAdmin

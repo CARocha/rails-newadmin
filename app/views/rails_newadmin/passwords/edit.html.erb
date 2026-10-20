@@ -1,12 +1,12 @@
 <section class="newadmin-login">
   <h1><%= t("rails_newadmin.recovery.title") %></h1>
-  <% if @user.errors.any? %><div role="alert"><%= @user.errors.full_messages.to_sentence %></div><% end %>
+  <%= render "rails_newadmin/shared/errors", record: @user, scope: nil, fields: [:password, :password_confirmation] %>
   <%= form_with url: password_path, method: :patch do |form| %>
     <%= form.hidden_field :token, value: params[:token] %>
     <%= form.label :password, t("rails_newadmin.auth.password") %>
-    <%= form.password_field :password, required: true, minlength: 12, maxlength: 72, autocomplete: "new-password" %>
+    <%= form.password_field :password, **field_error_attributes(@user, :password, scope: nil), required: true, minlength: 12, maxlength: 72, autocomplete: "new-password" %><%= render "rails_newadmin/shared/field_error", record: @user, field: :password, scope: nil %>
     <%= form.label :password_confirmation, t("rails_newadmin.recovery.confirm") %>
-    <%= form.password_field :password_confirmation, required: true, minlength: 12, maxlength: 72, autocomplete: "new-password" %>
+    <%= form.password_field :password_confirmation, **field_error_attributes(@user, :password_confirmation, scope: nil), required: true, minlength: 12, maxlength: 72, autocomplete: "new-password" %><%= render "rails_newadmin/shared/field_error", record: @user, field: :password_confirmation, scope: nil %>
     <%= form.submit t("rails_newadmin.recovery.save") %>
   <% end %>
 </section>

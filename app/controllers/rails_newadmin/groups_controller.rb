@@ -1,6 +1,6 @@
 module RailsNewadmin
   class GroupsController < ApplicationController
-    before_action -> { head :forbidden unless can_manage_access? }
+    before_action -> { render_access_denied unless can_manage_access? }
 
     def index
       @groups = Group.order(:name).limit(100)

@@ -73,11 +73,11 @@ module RailsNewadmin
       @permission_action = { "index" => :view, "show" => :view, "options" => :view,
         "new" => :create, "create" => :create, "edit" => :update, "update" => :update,
         "delete" => :destroy, "destroy" => :destroy }.fetch(action_name)
-      head :forbidden unless @access.granted?(@permission_action)
+      render_access_denied unless @access.granted?(@permission_action)
     end
 
     def authorize_action
-      head :forbidden unless @access.allowed?(@permission_action, @record)
+      render_access_denied unless @access.allowed?(@permission_action, @record)
     end
 
     def persist(action, template)

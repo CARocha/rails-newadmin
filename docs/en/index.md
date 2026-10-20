@@ -12,6 +12,7 @@ permissions
 appearance
 dashboards
 navigation
+accessibility
 production
 troubleshooting
 ```

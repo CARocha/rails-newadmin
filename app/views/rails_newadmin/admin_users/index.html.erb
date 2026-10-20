@@ -1,4 +1,4 @@
 <div class="newadmin-page-heading"><h1><%= t("rails_newadmin.access.users") %></h1><%= link_to t("rails_newadmin.crud.new"), new_admin_user_path, class: "btn btn-primary" %></div>
-<section class="newadmin-panel"><div class="newadmin-table-scroll"><table><thead><tr><th scope="col"><%= t("rails_newadmin.auth.email") %></th><th scope="col"><%= t("rails_newadmin.access.active") %></th><th scope="col"><%= t("rails_newadmin.crud.actions") %></th></tr></thead><tbody>
+<section class="newadmin-panel"><div class="newadmin-table-scroll" tabindex="0" role="region" aria-label="<%= t("rails_newadmin.access.users") %>"><table><thead><tr><th scope="col"><%= t("rails_newadmin.auth.email") %></th><th scope="col"><%= t("rails_newadmin.access.active") %></th><th scope="col"><%= t("rails_newadmin.crud.actions") %></th></tr></thead><tbody>
 <% @users.each do |user| %><tr><td><%= user.email_address %></td><td><%= user.active? ? t("rails_newadmin.access.yes") : t("rails_newadmin.access.no") %></td><td><%= link_to t("rails_newadmin.crud.edit"), edit_admin_user_path(user) %></td></tr><% end %>
 </tbody></table></div></section>

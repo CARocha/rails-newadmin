@@ -1,6 +1,14 @@
 ---
 es:
   rails_newadmin:
+    appearance_modes:
+      auto: Automático
+      light: Claro
+      dark: Oscuro
+    denied:
+      title: Acceso denegado
+      description: Tu cuenta no tiene permiso para acceder a esta página. Contacta con tu administrador si necesitas acceso.
+    form_errors: Corrige los siguientes errores
     skip: Saltar al contenido
     auth:
       title: Bienvenido a NewAdmin

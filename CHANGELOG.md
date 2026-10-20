@@ -2,6 +2,7 @@
 
 ## 0.1.0.alpha.1 — unreleased / sin publicar
 
+- Accessible validation summaries and field errors, Turbo focus, named keyboard table regions, generic HTML access-denied pages, relation loading announcements and narrow-screen fixes.
 - Mountable administration engine for Ruby >=3.4 and Rails 8.0/8.1.
 - Importmap/esbuild host navigation verified with real packaged production apps, alternate mount, deployment prefix, history, CRUD and chart/listener cleanup; host authentication rejects ambiguous dot-segment paths.
 - Explicit existing-host authentication adapter, default-deny identity/group bridge without duplicate passwords, native host logout and scoped audit.

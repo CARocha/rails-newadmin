@@ -7,9 +7,19 @@ module RailsNewadmin
     around_action :with_admin_locale
     helper_method :current_actor, :admin_config, :host_authentication?, :admin_logout_path
     helper_method :can_manage_access?, :resource_access
-    rescue_from RailsNewadmin::AccessDenied, with: -> { head :forbidden }
+    rescue_from RailsNewadmin::AccessDenied, with: -> { render_access_denied }
 
     private
+
+    # Do not resolve the actor again: host authentication may itself have denied access.
+    def render_access_denied
+      return head(:forbidden) unless request.format.html?
+      locale = params[:locale].to_s.to_sym
+      locale = admin_config.default_locale unless admin_config.available_locales.include?(locale)
+      I18n.with_locale(locale) do
+        render "rails_newadmin/errors/forbidden", layout: "rails_newadmin/error", status: :forbidden
+      end
+    end
 
     def admin_config = RailsNewadmin.configuration
 

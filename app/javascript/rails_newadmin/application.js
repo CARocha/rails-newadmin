@@ -5,11 +5,23 @@ import { applyInitialTheme, nextMode } from "./appearance.js";
 const application = Application.start();
 window.RailsNewadmin = { application, Controller };
 application.register("newadmin-theme", class extends Controller {
-  connect() { try { applyInitialTheme(); } catch {} }
+  static targets = ["button", "status"];
+  static values = { modes: Object, label: String };
+  connect() {
+    try { applyInitialTheme(); } catch {}
+    this.describeMode(false);
+  }
+  describeMode(announce) {
+    const mode = document.documentElement.dataset.theme;
+    const description = `${this.labelValue}: ${this.modesValue[mode]}`;
+    if (this.hasButtonTarget) this.buttonTarget.setAttribute("aria-label", description);
+    if (announce && this.hasStatusTarget) this.statusTarget.textContent = description;
+  }
   toggle() {
     const mode = nextMode(document.documentElement.dataset.theme);
     document.documentElement.dataset.theme = mode;
     try { window.localStorage.setItem("rails-newadmin.theme", mode); } catch {}
+    this.describeMode(true);
     document.dispatchEvent(new CustomEvent("rails-newadmin:theme", { detail: { mode } }));
   }
 });
@@ -37,6 +49,11 @@ application.register("newadmin-relation", class extends Controller {
   async load(page) {
     this.abort?.abort();
     this.abort = new AbortController();
+    const abort = this.abort;
+    const spanish = document.documentElement.lang === "es";
+    this.selectTarget.setAttribute("aria-busy", "true");
+    this.moreTarget.disabled = true;
+    this.statusTarget.textContent = spanish ? "Cargando opciones…" : "Loading options…";
     const url = new URL(this.urlValue, window.location.origin);
     url.searchParams.set("q", this.searchTarget.value.slice(0, 200));
     url.searchParams.set("page", page);
@@ -54,9 +71,14 @@ application.register("newadmin-relation", class extends Controller {
       }
       this.page = page;
       this.moreTarget.hidden = options.length < 20;
-      this.statusTarget.textContent = "";
+      this.statusTarget.textContent = `${spanish ? "Opciones cargadas" : "Options loaded"}: ${options.length}.`;
     } catch (error) {
       if (error.name !== "AbortError") this.statusTarget.textContent = document.documentElement.lang === "es" ? "No se pudieron cargar las opciones." : "Options could not be loaded.";
+    } finally {
+      if (this.abort === abort) {
+        this.selectTarget.removeAttribute("aria-busy");
+        this.moreTarget.disabled = false;
+      }
     }
   }
 });
@@ -67,5 +89,22 @@ document.addEventListener("turbo:before-visit", (event) => {
   if (mount && path !== mount && !path.startsWith(`${mount}/`)) {
     event.preventDefault();
     window.location.assign(event.detail.url);
+  }
+});
+
+// Validation responses replace the form without a full navigation.
+application.register("newadmin-errors", class extends Controller {
+  connect() { this.element.focus(); }
+  focusField(event) {
+    const link = event.target.closest("a[href^='#']");
+    const field = link && document.getElementById(link.getAttribute("href").slice(1));
+    if (!field) return;
+    event.preventDefault();
+    field.focus();
+  }
+});
+document.addEventListener("turbo:load", (event) => {
+  if (event.detail.timing?.visitStart && !document.querySelector("#newadmin-errors")) {
+    document.querySelector("#main-content")?.focus();
   }
 });

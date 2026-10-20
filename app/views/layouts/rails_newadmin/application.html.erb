@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="turbo-cache-control" content="no-cache">
-    <title><%= admin_config.site_title %></title>
+    <title><%= admin_page_title %></title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= javascript_include_tag "rails_newadmin/appearance", nonce: true, data: { turbo_track: "reload" } %>
@@ -12,14 +12,15 @@
     <%= javascript_include_tag "rails_newadmin/application", defer: true, nonce: true, data: { turbo_track: "reload" } %>
     <%= yield :head %>
   </head>
-  <body class="newadmin-theme" data-controller="newadmin-theme newadmin-nav" data-action="keydown@window->newadmin-nav#close" data-newadmin-mount="<%= request.script_name %>">
+  <body class="newadmin-theme" data-controller="newadmin-theme newadmin-nav" data-newadmin-theme-label-value="<%= t("rails_newadmin.appearance") %>" data-newadmin-theme-modes-value="<%= t("rails_newadmin.appearance_modes").to_json %>" data-action="keydown@window->newadmin-nav#close" data-newadmin-mount="<%= request.script_name %>">
     <a href="#main-content" class="skip-link"><%= t("rails_newadmin.skip") %></a>
     <header class="newadmin-header">
       <%= link_to admin_config.site_title, root_path, class: "newadmin-brand" %>
       <span class="newadmin-header-context"><%= t("rails_newadmin.dashboard.title") %></span>
       <div class="newadmin-tools">
         <% if current_actor %><button type="button" class="newadmin-icon-button newadmin-mobile-toggle" data-action="newadmin-nav#toggle" data-newadmin-nav-target="toggle" aria-controls="newadmin-sidebar" aria-expanded="false" aria-label="<%= t("rails_newadmin.open_menu") %>">☰</button><% end %>
-        <button type="button" class="newadmin-icon-button" data-action="newadmin-theme#toggle" aria-label="<%= t("rails_newadmin.appearance") %>">◐</button>
+        <button type="button" class="newadmin-icon-button" data-action="newadmin-theme#toggle" data-newadmin-theme-target="button" aria-label="<%= t("rails_newadmin.appearance") %>: <%= t("rails_newadmin.appearance_modes.#{admin_config.default_mode}") %>">◐</button>
+        <span class="visually-hidden" role="status" data-newadmin-theme-target="status"></span>
         <nav aria-label="<%= t("rails_newadmin.language") %>"><%= link_to "ES", url_for(locale: :es), lang: "es" %> · <%= link_to "EN", url_for(locale: :en), lang: "en" %></nav>
         <% if current_actor %><%= button_to t("rails_newadmin.logout"), admin_logout_path, method: :delete, class: "btn btn-secondary", form: { data: { turbo: !host_authentication? } } %><% end %>
       </div>

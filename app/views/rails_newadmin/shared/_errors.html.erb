@@ -1,0 +1,8 @@
+<% if record.errors.any? %>
+  <div class="newadmin-alert newadmin-alert-danger" role="alert" id="newadmin-errors" tabindex="-1" data-controller="newadmin-errors" data-action="click->newadmin-errors#focusField" aria-labelledby="newadmin-errors-title">
+    <h2 id="newadmin-errors-title"><%= t("rails_newadmin.form_errors") %></h2>
+    <ul><% record.errors.each do |error| %>
+      <li><% if fields.map(&:to_s).include?(error.attribute.to_s) %><%= link_to error.full_message, "##{[scope, error.attribute].compact.join("_")}" %><% else %><%= error.full_message %><% end %></li>
+    <% end %></ul>
+  </div>
+<% end %>

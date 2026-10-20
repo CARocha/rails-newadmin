@@ -1,0 +1,11 @@
+require "json"
+password = SecureRandom.base64(24)
+user = RailsNewadmin::AdminUser.create!(email_address: "accessibility@example.test", password: password, staff: true, superuser: true)
+RailsNewadmin::AdminUser.create!(email_address: "reader@example.test", password: password, staff: true)
+organization = Organization.create!(name: "Accessibility fixture")
+AdminProfile.create!(admin_user: user, organization: organization)
+category = Category.create!(name: "Accessible category", organization: organization)
+article = Article.create!(title: "Keyboard and screen reader article", body: "Readable content", status: "draft", category: category, organization: organization)
+group = RailsNewadmin::Group.create!(name: "Reviewers")
+RailsNewadmin::Permission.find_or_create_by!(resource_key: "articles", action: "view")
+File.write(ENV.fetch("A11Y_CREDENTIALS"), JSON.generate(email: user.email_address, reader: "reader@example.test", password: password, article: article.id, user: user.id, group: group.id, token: user.password_reset_token))
