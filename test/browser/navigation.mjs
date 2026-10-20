@@ -30,13 +30,16 @@ try {
   const failures = [];
   const remoteRequests = [];
   let createRequests = 0;
-  page.on("request", request => {
-    if (request.url().startsWith("http") && new URL(request.url()).origin !== origin) remoteRequests.push(request.url());
-    if (request.method() === "POST" && new URL(request.url()).pathname === `${prefix}/control/resources/articles`) createRequests++;
-  });
-  page.on("pageerror", error => errors.push(error.message));
-  page.on("console", message => { if (["error", "warning"].includes(message.type())) errors.push(message.text()); });
-  page.on("response", response => { if (response.status() >= 400 && !response.url().endsWith("/favicon.ico")) failures.push(`${response.status()} ${response.url()}`); });
+  const monitor = tab => {
+    tab.on("request", request => {
+      if (request.url().startsWith("http") && new URL(request.url()).origin !== origin) remoteRequests.push(request.url());
+      if (request.method() === "POST" && new URL(request.url()).pathname === `${prefix}/control/resources/articles`) createRequests++;
+    });
+    tab.on("pageerror", error => errors.push(error.message));
+    tab.on("console", message => { if (["error", "warning"].includes(message.type())) errors.push(message.text()); });
+    tab.on("response", response => { if (response.status() >= 400 && !response.url().endsWith("/favicon.ico")) failures.push(`${response.status()} ${response.url()}`); });
+  };
+  monitor(page);
   const url = path => `${origin}${prefix}${path}`;
   await page.goto(url("/session/new"));
   await page.locator('input[name="email_address"]').fill(credentials.email);
@@ -113,10 +116,13 @@ try {
   assert.equal(createRequests, 1, "a single form submission must send a single POST");
   assert.equal(await page.evaluate(() => window.documentID), stableDocument);
   const direct = await context.newPage();
+  monitor(direct);
   const directScripts = [];
   direct.on("request", request => { if (request.resourceType() === "script") directScripts.push(request.url()); });
   await direct.goto(url("/control/resources/articles"));
-  await direct.waitForLoadState("networkidle");
+  // Readiness is the rendered application, rather than background network silence.
+  await direct.waitForFunction(() => window.RailsNewadmin?.application.controllers.some(c => c.identifier === "newadmin-theme"));
+  await direct.locator("tbody").waitFor({state: "visible"});
   assert.equal(directScripts.some(path => /rails_newadmin\/charts[-.]/.test(path)), false, "list must not load chart bundle");
   assert.equal(await direct.locator("tbody tr").filter({hasText: title}).count(), 1);
   await direct.close();
