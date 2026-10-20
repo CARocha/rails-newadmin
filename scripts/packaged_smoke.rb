@@ -5,6 +5,17 @@ require "tmpdir"
 require "fileutils"
 require "securerandom"
 require "open3"
+# Make disposable-fixture failures readable through public check annotations too.
+if ENV["GITHUB_ACTIONS"] == "true"
+  at_exit do
+    error = $!
+    if error && !(error.is_a?(SystemExit) && error.success?)
+      message = error.full_message(highlight: false).lines.first(45).join
+      message = message.gsub("%", "%25").gsub("\r", "%0D").gsub("\n", "%0A")
+      warn "::error title=Packaged browser diagnostic::#{message}"
+    end
+  end
+end
 root = File.expand_path("..", __dir__)
 FileUtils.mkdir_p(File.join(root, "pkg"))
 specification = Gem::Specification.load(File.join(root, "rails-newadmin.gemspec"))
