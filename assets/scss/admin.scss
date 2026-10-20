@@ -90,7 +90,7 @@ html[data-theme=dark] .newadmin-icon { filter: invert(1); }
 .newadmin-chart { overflow: hidden; }
 .newadmin-pagination { flex-wrap: wrap; }
 .newadmin-theme h1, .newadmin-theme h2, .newadmin-theme label, .newadmin-theme legend { overflow-wrap: anywhere; }
-.newadmin-theme :focus { scroll-margin-block: 6rem 2rem; }
+.newadmin-theme :focus { scroll-margin-block: calc(var(--newadmin-header-height, 64px) + 2rem) 2rem; }
 @media(min-width: 768px) {
-  .newadmin-sidebar { position: sticky; top: 64px; align-self: start; min-height: calc(100dvh - 64px); max-height: calc(100dvh - 64px); overflow-y: auto; }
+  .newadmin-sidebar { position: sticky; top: var(--newadmin-header-height, 64px); align-self: start; min-height: calc(100dvh - var(--newadmin-header-height, 64px)); max-height: calc(100dvh - var(--newadmin-header-height, 64px)); overflow-y: auto; }
 }

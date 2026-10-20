@@ -25,6 +25,21 @@ class AccessibilityTest < ActionDispatch::IntegrationTest
     assert_empty response.body
   end
 
+  test "denied pages retain the previously selected locale" do
+    get "/admin/", params: { locale: :en }
+    @user.update!(superuser: false)
+    get "/admin/groups"
+    assert_response :forbidden
+    assert_select "html[lang=en] h1", "Access denied"
+  end
+
+  test "denied pages use cached actor locale without another identity lookup" do
+    @user.update!(superuser: false, locale: "en")
+    get "/admin/groups"
+    assert_response :forbidden
+    assert_select "html[lang=en] h1", "Access denied"
+  end
+
   test "account errors name invalid fields and link a focusable summary" do
     get "/admin/admin_users/new"
     csrf_request :post, "/admin/admin_users", params: { admin_user: { email_address: "invalid", password: "short", password_confirmation: "different" } }

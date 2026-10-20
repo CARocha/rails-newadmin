@@ -26,7 +26,15 @@ application.register("newadmin-theme", class extends Controller {
   }
 });
 application.register("newadmin-nav", class extends Controller {
-  static targets = ["panel", "toggle"];
+  static targets = ["panel", "toggle", "header"];
+  connect() {
+    if (!this.hasHeaderTarget) return;
+    const measure = () => this.element.style.setProperty("--newadmin-header-height", `${this.headerTarget.offsetHeight}px`);
+    this.headerObserver = new ResizeObserver(measure);
+    this.headerObserver.observe(this.headerTarget);
+    measure();
+  }
+  disconnect() { this.headerObserver?.disconnect(); }
   toggle() {
     const open = this.panelTarget.dataset.open !== "true";
     this.panelTarget.dataset.open = String(open);

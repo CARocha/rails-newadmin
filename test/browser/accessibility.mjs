@@ -4,6 +4,7 @@ import { createRequire } from "node:module";
 import { chromium, firefox, webkit } from "playwright";
 import { assertPaletteContrast } from "./contrast.mjs";
 import { assertAppearanceAnnouncement } from "./appearance_check.mjs";
+import { assertGrowingHeader } from "./header_check.mjs";
 const require = createRequire(import.meta.url);
 const [origin, credentialsPath] = process.argv.slice(2);
 const credentials = JSON.parse(await readFile(credentialsPath, "utf8"));
@@ -67,6 +68,7 @@ for (const name of (process.env.A11Y_BROWSERS || "chromium").split(",")) {
     await page.locator('[name="password"]').fill(credentials.password);
     await page.locator('[type="submit"]').press("Enter");
     await page.waitForURL(url => url.pathname === "/admin/");
+    await assertGrowingHeader(page);
     const screens = [["dashboard", "/"], ["list", "/resources/articles"], ["empty", "/resources/articles?q=no-such-article"],
       ["detail", `/resources/articles/${credentials.article}`], ["new", "/resources/articles/new"],
       ["edit", `/resources/articles/${credentials.article}/edit`], ["delete", `/resources/articles/${credentials.article}/delete`],

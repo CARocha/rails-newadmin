@@ -14,7 +14,7 @@
   </head>
   <body class="newadmin-theme" data-controller="newadmin-theme newadmin-nav" data-newadmin-theme-label-value="<%= t("rails_newadmin.appearance") %>" data-newadmin-theme-modes-value="<%= t("rails_newadmin.appearance_modes").to_json %>" data-action="keydown@window->newadmin-nav#close" data-newadmin-mount="<%= request.script_name %>">
     <a href="#main-content" class="skip-link"><%= t("rails_newadmin.skip") %></a>
-    <header class="newadmin-header">
+    <header class="newadmin-header" data-newadmin-nav-target="header">
       <%= link_to admin_config.site_title, root_path, class: "newadmin-brand" %>
       <span class="newadmin-header-context"><%= t("rails_newadmin.dashboard.title") %></span>
       <div class="newadmin-tools">

@@ -14,7 +14,8 @@ module RailsNewadmin
     # Do not resolve the actor again: host authentication may itself have denied access.
     def render_access_denied
       return head(:forbidden) unless request.format.html?
-      locale = params[:locale].to_s.to_sym
+      requested = params[:locale].presence || cookies[:rails_newadmin_locale].presence || @current_actor&.locale || admin_config.default_locale
+      locale = requested.to_s.to_sym
       locale = admin_config.default_locale unless admin_config.available_locales.include?(locale)
       I18n.with_locale(locale) do
         render "rails_newadmin/errors/forbidden", layout: "rails_newadmin/error", status: :forbidden
