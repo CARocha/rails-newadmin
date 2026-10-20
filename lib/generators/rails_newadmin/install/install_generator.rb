@@ -10,6 +10,7 @@ module RailsNewadmin
       include Rails::Generators::Migration
       source_root Engine.root.join("db/migrate")
       class_option :authentication, type: :string, default: "builtin"
+      class_option :authentication_adapter, type: :string
       class_option :path, type: :string, default: "/admin"
 
       INITIALIZER_PATH = "config/initializers/rails_newadmin.rb"
@@ -29,7 +30,14 @@ module RailsNewadmin
       end
 
       def validate_destination
-        raise Thor::Error, "Only builtin authentication is available in this alpha" unless options[:authentication] == "builtin"
+        raise Thor::Error, "authentication must be builtin or host" unless %w[builtin host].include?(options[:authentication])
+        if options[:authentication] == "host"
+          unless /\A[A-Z]\w*(?:::[A-Z]\w*)*\z/.match?(options[:authentication_adapter].to_s)
+            raise Thor::Error, "host authentication requires --authentication-adapter=ExistingAdapterClass"
+          end
+        elsif options[:authentication_adapter]
+          raise Thor::Error, "authentication-adapter requires host authentication"
+        end
         raise Thor::Error, "path must be an absolute path with simple segments" unless %r{\A/(?:[a-z][a-z0-9_-]*)(?:/[a-z][a-z0-9_-]*)*\z}.match?(options[:path])
         routes = File.join(destination_root, "config/routes.rb")
         raise Thor::Error, "Run this inside a full Rails application" unless File.file?(routes)
@@ -49,15 +57,15 @@ module RailsNewadmin
         absolute = File.join(destination_root, INITIALIZER_PATH)
         if behavior == :revoke
           return unless File.exist?(absolute) || File.symlink?(absolute)
-          if File.file?(absolute) && !File.symlink?(absolute) && File.binread(absolute) == INITIALIZER_CONTENT
-            create_file INITIALIZER_PATH, INITIALIZER_CONTENT
+          if File.file?(absolute) && !File.symlink?(absolute) && pristine_initializer?(File.binread(absolute))
+            create_file INITIALIZER_PATH, File.binread(absolute)
           else
             say_status :preserve, "#{INITIALIZER_PATH} (edited or pre-existing; review manually)"
           end
         elsif File.exist?(absolute) || File.symlink?(absolute)
           say_status :preserve, INITIALIZER_PATH
         else
-          create_file INITIALIZER_PATH, INITIALIZER_CONTENT
+          create_file INITIALIZER_PATH, initializer_content
         end
       end
 
@@ -92,11 +100,25 @@ module RailsNewadmin
         if behavior == :revoke
           say "Review preserved files manually. Database migrations and data have not been removed."
         else
-          say "Next: bin/rails db:migrate; register resources; bin/rails rails_newadmin:permissions:sync; bin/rails rails_newadmin:admin:create"
+          say "Next: bin/rails db:migrate; register resources; bin/rails rails_newadmin:permissions:sync"
+          say(options[:authentication] == "host" ? "Provision an ActorIdentity for an existing host user; see the authentication guide." : "Create the first account: bin/rails rails_newadmin:admin:create")
         end
       end
 
       private
+
+      def initializer_content
+        options[:authentication] == "host" ? host_initializer(options[:authentication_adapter]) : INITIALIZER_CONTENT
+      end
+
+      def host_initializer(adapter)
+        INITIALIZER_CONTENT.sub("  config.site_title", "  config.authentication = :host\n  config.authentication_adapter = #{adapter.inspect}\n  config.site_title")
+      end
+
+      def pristine_initializer?(contents)
+        adapter = contents[/^  config.authentication_adapter = "([A-Z]\w*(?:::[A-Z]\w*)*)"$/, 1]
+        contents == INITIALIZER_CONTENT || (adapter && contents == host_initializer(adapter))
+      end
 
       def routing_source(contents)
         # Preserve newlines so a commented example cannot hide the next statement.

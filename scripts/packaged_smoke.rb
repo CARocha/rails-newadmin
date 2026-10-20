@@ -69,13 +69,22 @@ File.open(log_path, "w") do |log|
       retained = 'abort "Installer changed persisted data" unless Article.exists?(title: "Installer retained data") && RailsNewadmin::AdminUser.exists?(email_address: "retained@example.test")'
       execute.call([ ruby, bundle, "exec", "ruby", "bin/rails", "runner", retained ], host, environment)
       raise "Reinstall changed migration history" unless migration_files == Dir[File.join(host, "db/migrate/*.rb")].to_h { |path| [ path, File.binread(path) ] }
+      # Add the application's native Rails login before enabling the host adapter.
+      execute.call([ ruby, bundle, "exec", "ruby", "bin/rails", "generate", "authentication" ], host, environment)
+      execute.call([ ruby, bundle, "install", "--local" ], host, environment)
+      routes = File.join(host, "config/routes.rb")
+      File.write(routes, File.read(routes).sub("Rails.application.routes.draw do", 'Rails.application.routes.draw do' + "\n  root to: ->(_env) { [200, {\"content-type\" => \"text/plain\"}, [\"Host home\"]] }"))
+      FileUtils.cp(File.join(root, "test/host_app/newadmin_host_adapter.rb"), File.join(host, "app/models/newadmin_host_adapter.rb"))
       production = environment.merge("RAILS_ENV" => "production", "RAILS_LOG_LEVEL" => "warn",
         "SECRET_KEY_BASE" => SecureRandom.hex(64), "PACKAGED_ROOT" => package_root, "VERIFY_WITHOUT_NODE" => "1",
         "PATH" => "#{File.dirname(ruby)}:/usr/bin:/bin")
       [ [ "db:migrate" ], [ "assets:precompile" ], [ "runner", File.join(root, "scripts/production_smoke.rb") ] ].each do |arguments|
         execute.call([ ruby, "bin/rails", *arguments ], host, production)
       end
+      FileUtils.rm(File.join(host, "config/initializers/rails_newadmin.rb"))
+      execute.call([ ruby, bundle, "exec", "ruby", "bin/rails", "generate", "rails_newadmin:install", "--path", "/control", "--authentication=host", "--authentication-adapter=NewadminHostAdapter" ], host, environment)
+      execute.call([ ruby, "bin/rails", "runner", File.join(root, "scripts/host_production_smoke.rb") ], host, production)
     end
   end
 end
-puts "Real package, install/destroy/reinstall with retained data and production without Node: passed"
+puts "Real package, install/destroy/reinstall with retained data and builtin and native host authentication in production without Node: passed"

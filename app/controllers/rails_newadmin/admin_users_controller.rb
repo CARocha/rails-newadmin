@@ -1,5 +1,6 @@
 module RailsNewadmin
   class AdminUsersController < ApplicationController
+    prepend_before_action :require_builtin_authentication
     before_action -> { head :forbidden unless can_manage_access? }
 
     def index

@@ -1,5 +1,6 @@
 module RailsNewadmin
   class PasswordsController < ApplicationController
+    prepend_before_action :require_builtin_authentication
     skip_before_action :require_admin
     before_action :load_user, only: [ :edit, :update ]
     rate_limit to: 10, within: 3.minutes, only: :create, store: RateLimitStore.new,

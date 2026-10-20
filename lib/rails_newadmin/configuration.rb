@@ -26,7 +26,14 @@ module RailsNewadmin
       end
       raise ConfigurationError, "session timeouts must be positive" unless [ session_lifetime, session_idle_timeout ].all? { |value| value.is_a?(Numeric) && value.positive? }
       raise ConfigurationError, "site_title must be non-empty text" unless site_title.is_a?(String) && site_title.present?
-      raise ConfigurationError, "This alpha supports builtin authentication; host adapters are a later integration" unless authentication == :builtin
+      raise ConfigurationError, "authentication must be builtin or host" unless %i[builtin host].include?(authentication)
+      if authentication == :host
+        unless authentication_adapter.is_a?(String) && /\A[A-Z]\w*(?:::[A-Z]\w*)*\z/.match?(authentication_adapter)
+          raise ConfigurationError, "host authentication requires authentication_adapter as a class-name string"
+        end
+      elsif authentication_adapter
+        raise ConfigurationError, "authentication_adapter requires host authentication"
+      end
       if dashboard_provider && (!dashboard_provider.is_a?(String) || !/\A[A-Z]\w*(?:::[A-Z]\w*)*\z/.match?(dashboard_provider))
         raise ConfigurationError, "dashboard_provider must be a class-name string"
       end

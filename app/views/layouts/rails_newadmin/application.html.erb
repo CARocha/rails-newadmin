@@ -21,7 +21,7 @@
         <% if current_actor %><button type="button" class="newadmin-icon-button newadmin-mobile-toggle" data-action="newadmin-nav#toggle" data-newadmin-nav-target="toggle" aria-controls="newadmin-sidebar" aria-expanded="false" aria-label="<%= t("rails_newadmin.open_menu") %>">☰</button><% end %>
         <button type="button" class="newadmin-icon-button" data-action="newadmin-theme#toggle" aria-label="<%= t("rails_newadmin.appearance") %>">◐</button>
         <nav aria-label="<%= t("rails_newadmin.language") %>"><%= link_to "ES", url_for(locale: :es), lang: "es" %> · <%= link_to "EN", url_for(locale: :en), lang: "en" %></nav>
-        <% if current_actor %><%= button_to t("rails_newadmin.logout"), session_path, method: :delete, class: "btn btn-secondary" %><% end %>
+        <% if current_actor %><%= button_to t("rails_newadmin.logout"), admin_logout_path, method: :delete, class: "btn btn-secondary", form: { data: { turbo: !host_authentication? } } %><% end %>
       </div>
     </header>
     <div class="<%= current_actor ? "newadmin-shell" : "newadmin-login-wrap" %>">
@@ -36,7 +36,7 @@
               <% end %>
             <% end %>
             <% if can_manage_access? %>
-              <%= link_to t("rails_newadmin.access.users"), admin_users_path %>
+              <% unless host_authentication? %><%= link_to t("rails_newadmin.access.users"), admin_users_path %><% end %>
               <%= link_to t("rails_newadmin.access.groups"), groups_path %>
             <% end %>
           </nav>

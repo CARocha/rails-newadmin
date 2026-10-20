@@ -9,3 +9,5 @@ Create groups in the panel, select permissions and assign accounts. A reader wit
 Audit events contain actor/resource identifiers, action, request ID, timestamp and changed field names. They do not contain before/after values, passwords or bodies. Mutation and audit share a transaction: audit failure rolls the mutation back. Record details show up to 50 recent events.
 
 Define audit retention, expired-session cleanup and backup access for your application. No remote telemetry or automatic periodic cleanup service is enabled.
+
+In host mode, assign groups to `ActorIdentity` through the console as described in [Authentication](authentication.md). Group grants and policy scopes apply to `HostActor`; builtin account management is disabled.

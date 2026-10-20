@@ -1,6 +1,12 @@
 require "json"
 result = JSON.parse(File.read("coverage/.resultset.json"))
 suffixes = %w[
+  lib/rails_newadmin/host_authentication_adapter.rb
+  lib/rails_newadmin/host_authentication.rb
+  lib/rails_newadmin/host_actor.rb
+  lib/rails_newadmin/configuration.rb
+  app/models/rails_newadmin/actor_identity.rb
+  app/models/rails_newadmin/actor_membership.rb
   lib/rails_newadmin/access_management.rb
   lib/rails_newadmin/access.rb
   lib/rails_newadmin/policy.rb

@@ -13,3 +13,5 @@
 There is no prior public version for a real upgrade rehearsal yet. For future alphas: back up, read the changelog, update the bundle, copy new engine migrations with `bin/rails rails_newadmin:install:migrations`, migrate, sync permissions, precompile and check policies/overrides in staging. Do not delete applied migrations or restore only old code over an incompatible schema.
 
 To remove the integration, follow [Reverse the installation](installation.md#reverse-the-installation). `bin/rails destroy rails_newadmin:install` retains migrations and data, removing only unchanged generated entries. Review preserved files before removing the dependency.
+
+With host authentication, a 403 after successful login means the host account is inactive or its `ActorIdentity` is missing/inactive/nonstaff. Check the adapter and grants; signing in alone never creates an admin identity. Builtin login/recovery/account URLs return 404 by design. Incomplete adapters cause an explicit configuration error; review all four method signatures.

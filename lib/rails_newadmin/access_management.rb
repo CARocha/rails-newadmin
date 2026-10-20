@@ -10,6 +10,7 @@ module RailsNewadmin
     end
 
     def update_user!(user, attributes)
+      raise AccessDenied if @actor.is_a?(HostActor)
       attributes = attributes.to_h.symbolize_keys
       raise AccessDenied if !@actor.superuser? && attributes.key?(:superuser)
       allowed = [ :email_address, :password, :password_confirmation, :active, :staff, :superuser, :locale, :group_ids ]

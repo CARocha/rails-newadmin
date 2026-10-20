@@ -12,6 +12,7 @@ namespace :rails_newadmin do
   namespace :admin do
     desc "Create the first administrator interactively, without default credentials"
     task create: :environment do
+      abort "Host authentication uses ActorIdentity; provision an existing host user in the console" if RailsNewadmin.configuration.authentication == :host
       abort "Interactive terminal required" unless $stdin.tty?
       print "Email: "
       email = $stdin.gets&.strip

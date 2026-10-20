@@ -1,5 +1,6 @@
 module RailsNewadmin
   class SessionsController < ApplicationController
+    prepend_before_action :require_builtin_authentication
     skip_before_action :require_admin, only: [ :new, :create ]
     rate_limit to: 10, within: 3.minutes, only: :create, store: RateLimitStore.new,
       with: -> { render :new, status: :too_many_requests }

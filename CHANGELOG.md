@@ -3,6 +3,7 @@
 ## 0.1.0.alpha.1 — unreleased / sin publicar
 
 - Mountable administration engine for Ruby >=3.4 and Rails 8.0/8.1.
+- Explicit existing-host authentication adapter, default-deny identity/group bridge without duplicate passwords, native host logout and scoped audit.
 - Independent native authentication, CSRF, expiring/revocable sessions and recovery.
 - Explicit resources, default-deny scoped policies, group grants and access management.
 - CRUD, bounded relation search, optimistic edits, atomic field-name audit.

@@ -42,3 +42,5 @@ The installer removes its generated initializer and mount only while they remain
 Review `config/routes.rb`: if a customized mount was preserved, remove it manually to disable access to the panel. Before removing the gem from the Gemfile, remove remaining engine references from application configuration too.
 
 Reinstall with `bin/rails generate rails_newadmin:install` (or `--path /control` for another path). Existing migrations are reused and customizations are retained. Repeating installation or reversal does not duplicate migrations.
+
+For an existing application login, follow [Use an existing Rails login](authentication.md#use-an-existing-rails-login) instead of creating a builtin account.

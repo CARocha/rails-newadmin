@@ -2,10 +2,10 @@ module RailsNewadmin
   class ApplicationController < ActionController::Base
     protect_from_forgery with: :exception
     layout "rails_newadmin/application"
+    before_action :secure_admin_response
     before_action :require_admin
     around_action :with_admin_locale
-    before_action :secure_admin_response
-    helper_method :current_actor, :admin_config
+    helper_method :current_actor, :admin_config, :host_authentication?, :admin_logout_path
     helper_method :can_manage_access?, :resource_access
     rescue_from RailsNewadmin::AccessDenied, with: -> { head :forbidden }
 
@@ -18,7 +18,18 @@ module RailsNewadmin
       @current_admin_session = AdminSession.resume(cookies.encrypted[:rails_newadmin_session])
     end
 
-    def current_actor = current_admin_session&.admin_user
+    def host_authentication? = admin_config.authentication == :host
+    def host_authentication = @host_authentication ||= HostAuthentication.new(self)
+    def admin_logout_path = host_authentication? ? host_authentication.logout_path : session_path
+
+    def current_actor
+      return @current_actor if defined?(@current_actor)
+      @current_actor = host_authentication? ? host_authentication.actor : current_admin_session&.admin_user
+    end
+
+    def require_builtin_authentication
+      head :not_found if host_authentication?
+    end
     def can_manage_access? = current_actor&.administrative? && (current_actor.superuser? || current_actor.has_permission?("admin_access", "manage_access"))
 
     def resource_access(resource)
@@ -27,7 +38,7 @@ module RailsNewadmin
     end
 
     def require_admin
-      redirect_to new_session_path unless current_actor
+      redirect_to(host_authentication? ? host_authentication.login_path : new_session_path) unless current_actor
     end
 
     def with_admin_locale(&block)

@@ -9,3 +9,5 @@ Crea grupos desde el panel, marca permisos y asigna cuentas. Un lector puede ten
 La auditoría registra actor, recurso, ID, acción, request ID, fecha y nombres de campos cambiados. No almacena valores previos/nuevos, contraseñas ni cuerpos. La mutación y su evento comparten transacción: si falla el evento, se revierte la mutación. El detalle muestra los últimos 50 eventos del registro.
 
 Define retención, limpieza de sesiones caducadas y acceso a backups según tu aplicación. No hay un servicio remoto de telemetría ni una tarea periódica de limpieza habilitada automáticamente.
+
+En modo host, asigna grupos a `ActorIdentity` desde la consola siguiendo [Autenticación](authentication.md). Las concesiones y scopes se aplican a `HostActor`; la gestión de cuentas builtin está desactivada.

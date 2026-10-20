@@ -13,3 +13,5 @@
 No existe todavía una versión anterior pública desde la que ensayar una actualización. Para futuras alfas: copia de seguridad, consulta changelog, actualiza bundle, instala las nuevas migraciones del engine con `bin/rails rails_newadmin:install:migrations`, migra, sincroniza permisos, recompila assets y verifica políticas/overrides en staging. No borres migraciones aplicadas ni restaures solo el código sobre un esquema incompatible.
 
 Para retirar la integración, sigue [Revertir la instalación](installation.md#revertir-la-instalación). `bin/rails destroy rails_newadmin:install` conserva migraciones y datos, y solo retira archivos generados sin editar. Revisa los archivos conservados antes de quitar la dependencia.
+
+Con autenticación host, un 403 después del login indica una cuenta inactiva o una `ActorIdentity` ausente/inactiva/sin staff. Revisa el adaptador y los permisos: iniciar sesión no crea una identidad administrativa. Las URLs de login/recuperación/cuentas builtin devuelven 404 por diseño. Un adaptador incompleto provoca un error explícito de configuración; revisa las cuatro firmas de métodos.

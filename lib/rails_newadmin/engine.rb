@@ -22,6 +22,7 @@ module RailsNewadmin
 
     config.to_prepare do
       RailsNewadmin.configuration.validate!
+      RailsNewadmin::HostAuthentication.adapter_class if RailsNewadmin.configuration.authentication == :host
       Dir[Rails.root.join("app/admin/resources/**/*.rb")].sort.each { |path| require_dependency path }
       RailsNewadmin.registry = RailsNewadmin::Registry.new(RailsNewadmin::Resource.descendants.select { |klass| klass.name && klass.name.safe_constantize.equal?(klass) })
     end

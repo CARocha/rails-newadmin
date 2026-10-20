@@ -4,7 +4,7 @@ Administrador independiente para Rails con la identidad visual de NewAdmin. **Ru
 
 [English](README.md) · [Manual de uso](docs/es/index.md)
 
-Administra recursos Active Record con cuentas independientes, permisos por grupos, políticas con alcance, CRUD e historial de auditoría. Incluye interfaz ES/EN, apariencia clara/oscura/automática y dashboards opcionales con gráficos locales. La autenticación usa primitivas de Rails sin Devise.
+Administra recursos Active Record con cuentas independientes o el login existente de tu aplicación, permisos por grupos, políticas con alcance, CRUD e historial de auditoría. Incluye interfaz ES/EN, apariencia clara/oscura/automática y dashboards opcionales con gráficos locales. La autenticación usa primitivas de Rails sin Devise.
 
 ## Instalar
 
@@ -50,6 +50,6 @@ end
 - [Configuración de producción](docs/es/production.md)
 - [Resolución de problemas y actualizaciones](docs/es/troubleshooting.md)
 
-Producción requiere HTTPS, un almacén compartido con incremento atómico para limitar intentos y entrega de correo configurada. Esta alfa usa cuentas administrativas independientes. No incluye adaptador al login del host, exportaciones, acciones masivas ni subida de archivos.
+Producción requiere HTTPS, un almacén compartido con incremento atómico para limitar intentos y entrega de correo configurada. Puedes elegir cuentas propias o un [adaptador al login del host](docs/es/authentication.md#usar-el-login-existente-de-rails), con membresías separadas y sin otra contraseña. No incluye exportaciones, acciones masivas ni subida de archivos.
 
 [Seguridad](SECURITY.md) · [Cambios](CHANGELOG.md) · [Licencia BSD-3-Clause](LICENSE). Los componentes incluidos conservan sus licencias; consulta [NOTICE](NOTICE).

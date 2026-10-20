@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_18_010000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_19_010000) do
   create_table "admin_profiles", force: :cascade do |t|
     t.integer "organization_id", null: false
     t.integer "admin_user_id", null: false
@@ -41,6 +41,25 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_18_010000) do
 
   create_table "organizations", force: :cascade do |t|
     t.string "name", null: false
+  end
+
+  create_table "rails_newadmin_actor_identities", force: :cascade do |t|
+    t.string "actor_type", null: false
+    t.string "actor_id", null: false
+    t.boolean "active", default: false, null: false
+    t.boolean "staff", default: false, null: false
+    t.boolean "superuser", default: false, null: false
+    t.string "locale"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actor_type", "actor_id"], name: "rails_newadmin_actor_key", unique: true
+  end
+
+  create_table "rails_newadmin_actor_memberships", force: :cascade do |t|
+    t.integer "actor_identity_id", null: false
+    t.integer "group_id", null: false
+    t.index ["actor_identity_id", "group_id"], name: "rails_newadmin_actor_group", unique: true
+    t.index ["group_id"], name: "index_rails_newadmin_actor_memberships_on_group_id"
   end
 
   create_table "rails_newadmin_admin_sessions", force: :cascade do |t|
@@ -108,14 +127,36 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_18_010000) do
     t.index ["resource_key", "action"], name: "index_rails_newadmin_permissions_on_resource_key_and_action", unique: true
   end
 
+  create_table "sessions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "ip_address"
+    t.string "user_agent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email_address", null: false
+    t.string "password_digest", null: false
+    t.boolean "active", default: true, null: false
+    t.integer "organization_id", null: false
+    t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["organization_id"], name: "index_users_on_organization_id"
+  end
+
   add_foreign_key "admin_profiles", "organizations"
   add_foreign_key "admin_profiles", "rails_newadmin_admin_users", column: "admin_user_id"
   add_foreign_key "articles", "categories"
   add_foreign_key "articles", "organizations"
   add_foreign_key "categories", "organizations"
+  add_foreign_key "rails_newadmin_actor_memberships", "rails_newadmin_actor_identities", column: "actor_identity_id"
+  add_foreign_key "rails_newadmin_actor_memberships", "rails_newadmin_groups", column: "group_id"
   add_foreign_key "rails_newadmin_admin_sessions", "rails_newadmin_admin_users", column: "admin_user_id"
   add_foreign_key "rails_newadmin_group_permissions", "rails_newadmin_groups", column: "group_id"
   add_foreign_key "rails_newadmin_group_permissions", "rails_newadmin_permissions", column: "permission_id"
   add_foreign_key "rails_newadmin_memberships", "rails_newadmin_admin_users", column: "admin_user_id"
   add_foreign_key "rails_newadmin_memberships", "rails_newadmin_groups", column: "group_id"
+  add_foreign_key "sessions", "users"
+  add_foreign_key "users", "organizations"
 end

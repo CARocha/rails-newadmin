@@ -42,3 +42,5 @@ Se retiran el initializer y el montaje creados por el instalador cuando siguen s
 Revisa `config/routes.rb`: si el montaje se conservó porque lo personalizaste, retíralo manualmente para deshabilitar el acceso al panel. Antes de quitar la gema del Gemfile, retira también las referencias restantes al engine en la configuración.
 
 Puedes reinstalar con `bin/rails generate rails_newadmin:install` (o `--path /control` para otra ruta). Se reutilizan las migraciones existentes y se conservan las personalizaciones. Repetir la instalación o la reversión no duplica migraciones.
+
+Para reutilizar el login de tu aplicación, sigue [Usar el login existente de Rails](authentication.md#usar-el-login-existente-de-rails) en lugar de crear una cuenta builtin.

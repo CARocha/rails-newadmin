@@ -10,7 +10,7 @@ class InstallGeneratorTest < ActiveSupport::TestCase
     with_app do |directory|
       run_generator(directory, [ "--path", "/staff/admin" ])
       migrations = snapshot(directory).select { |path, _| path.start_with?("db/migrate/") }
-      assert_equal 3, migrations.size
+      assert_equal 4, migrations.size
       output = run_generator(directory, [], behavior: :revoke)
       refute_match(/edited or pre-existing RailsNewadmin::Engine mount/, output)
       refute File.exist?("#{directory}/config/initializers/rails_newadmin.rb")
@@ -20,7 +20,7 @@ class InstallGeneratorTest < ActiveSupport::TestCase
       run_generator(directory, [], behavior: :revoke)
       assert_equal first, snapshot(directory)
       run_generator(directory)
-      assert_equal 3, Dir["#{directory}/db/migrate/*.rb"].size
+      assert_equal 4, Dir["#{directory}/db/migrate/*.rb"].size
       assert_equal 1, File.read("#{directory}/config/routes.rb").scan(/^  mount RailsNewadmin::Engine/).size
     end
   end
@@ -145,6 +145,29 @@ class InstallGeneratorTest < ActiveSupport::TestCase
       File.write(path, routes)
       run_generator(directory, [], behavior: :revoke)
       assert_equal routes, File.read(path)
+    end
+  end
+
+  test "host install requires an explicit adapter before writing any files" do
+    with_app do |directory|
+      before = snapshot(directory)
+      assert_raises(Thor::Error) { run_generator(directory, [ "--authentication=host" ]) }
+      assert_equal before, snapshot(directory)
+      assert_raises(Thor::Error) { run_generator(directory, [ "--authentication=host", "--authentication-adapter=unsafe;code" ]) }
+      assert_equal before, snapshot(directory)
+    end
+  end
+
+  test "host install configures an existing adapter and safe destroy preserves migrations" do
+    with_app do |directory|
+      output = run_generator(directory, [ "--authentication=host", "--authentication-adapter=Admin::LoginAdapter" ])
+      initializer = File.read("#{directory}/config/initializers/rails_newadmin.rb")
+      assert_includes initializer, "config.authentication = :host"
+      assert_includes initializer, 'config.authentication_adapter = "Admin::LoginAdapter"'
+      refute_includes output, "rails_newadmin:admin:create"
+      run_generator(directory, [], behavior: :revoke)
+      refute File.exist?("#{directory}/config/initializers/rails_newadmin.rb")
+      assert_equal 4, Dir["#{directory}/db/migrate/*.rb"].size
     end
   end
 
