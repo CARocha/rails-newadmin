@@ -99,10 +99,14 @@ class HostIdentityTest < ActiveSupport::TestCase
   test "host redirects reject external malformed and engine-local paths" do
     controller = Struct.new(:request).new(Struct.new(:script_name).new("/admin"))
     resolver = RailsNewadmin::HostAuthentication.new(controller)
-    [ nil, "https://evil.test", "//evil.test", "/\\evil.test", "/host\n", "/admin", "/admin/session/new", "/bad%ZZ" ].each do |path|
+    [ nil, "https://evil.test", "//evil.test", "/\\evil.test", "/host\n", "/admin", "/admin/session/new", "/bad%ZZ", "/outside/../admin", "/outside/./login", "/%2e%2e/admin", "/outside/%2E./admin", "/outside%2f..%2fadmin", "/%252e%252e/admin", "/%5cevil.test" ].each do |path|
       assert_raises(RailsNewadmin::ConfigurationError, path.inspect) { resolver.send(:local_host_path, path) }
     end
     assert_equal "/login?locale=en", resolver.send(:local_host_path, "/login?locale=en")
+    controller.request.script_name = "/portal/control"
+    assert_raises(RailsNewadmin::ConfigurationError) { resolver.send(:local_host_path, "/portal/control/session/new") }
+    assert_equal "/portal/session/new", resolver.send(:local_host_path, "/portal/session/new")
+    assert_equal "/portal/control-room/login", resolver.send(:local_host_path, "/portal/control-room/login")
     controller.request.script_name = ""
     assert_equal "/login", resolver.send(:local_host_path, "/login")
   end
