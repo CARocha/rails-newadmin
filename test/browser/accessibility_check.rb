@@ -5,6 +5,17 @@ require "open3"
 require "socket"
 require "net/http"
 require_relative "packaged_navigation"
+# Keep disposable-fixture failures readable through public check annotations.
+if ENV["GITHUB_ACTIONS"] == "true"
+  at_exit do
+    error = $!
+    if error && !(error.is_a?(SystemExit) && error.success?)
+      message = error.full_message(highlight: false).lines.first(45).join
+      message = message.gsub("%", "%25").gsub("\r", "%0D").gsub("\n", "%0A")
+      warn "::error title=Accessibility diagnostic::#{message}"
+    end
+  end
+end
 root = File.expand_path("../..", __dir__)
 ruby = RbConfig.ruby
 Dir.mktmpdir("newadmin-accessibility-") do |directory|
@@ -13,7 +24,7 @@ Dir.mktmpdir("newadmin-accessibility-") do |directory|
     "A11Y_CREDENTIALS" => File.join(directory, "credentials.json") }
   run = lambda do |*command|
     output, status = Open3.capture2e(environment, *command, chdir: root)
-    raise output unless status.success?
+    raise "Accessibility command failed: #{command.first(3).join(' ')}\n#{output.lines.last(35).join}" unless status.success?
     puts output
   end
   run.call(ruby, "-S", "bundle", "exec", "rails", "db:migrate")
