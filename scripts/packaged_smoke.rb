@@ -12,7 +12,8 @@ archive = File.join(root, "pkg", "#{specification.full_name}.gem")
 Dir.chdir(root) { Gem::Package.build(specification, false, false, archive) }
 ruby = RbConfig.ruby
 bundle = Gem.bin_path("bundler", "bundle")
-bundle_path = File.expand_path(Bundler.settings[:path] || Bundler.bundle_path.parent.parent.to_s, root)
+source_gemfile = Bundler.default_gemfile.to_s
+bundle_path = Bundler.settings[:path] && File.expand_path(Bundler.settings[:path], Bundler.root)
 log_path = File.join(root, "pkg/production-smoke.log")
 File.open(log_path, "w") do |log|
   execute = lambda do |arguments, directory, environment = {}|
@@ -27,7 +28,7 @@ File.open(log_path, "w") do |log|
     package.extract_files(package_root)
     File.write(File.join(package_root, "rails-newadmin.gemspec"), package.spec.to_ruby)
     flags = %w[--skip-bundle --skip-git --skip-solid --skip-javascript --skip-hotwire --skip-action-mailbox --skip-action-text --skip-active-storage --skip-action-cable --skip-bootsnap --skip-dev-gems --skip-thruster --skip-rubocop --skip-brakeman --skip-bundler-audit --skip-ci --skip-kamal --skip-docker --skip-test]
-    execute.call([ ruby, bundle, "exec", "rails", "new", "host", *flags ], directory, { "BUNDLE_GEMFILE" => File.join(root, "Gemfile") })
+    execute.call([ ruby, bundle, "exec", "rails", "new", "host", *flags ], directory, { "BUNDLE_GEMFILE" => source_gemfile })
     host = File.join(directory, "host")
     File.write(File.join(host, "Gemfile"), <<~GEMFILE)
       source "https://rubygems.org"
@@ -37,6 +38,7 @@ File.open(log_path, "w") do |log|
       gem "sqlite3", "~> 2.1"
       gem "puma", "~> 7.0"
       gem "redis", "~> 5.0"
+      gem "importmap-rails", "2.2.2"
     GEMFILE
     File.write(File.join(host, "config/database.yml"), "default: &default\n  adapter: sqlite3\n  database: storage/package.sqlite3\nproduction:\n  <<: *default\ndevelopment:\n  <<: *default\n")
     File.write(File.join(host, "config/initializers/package_smoke.rb"), <<~CONFIG)
@@ -84,6 +86,10 @@ File.open(log_path, "w") do |log|
       FileUtils.rm(File.join(host, "config/initializers/rails_newadmin.rb"))
       execute.call([ ruby, bundle, "exec", "ruby", "bin/rails", "generate", "rails_newadmin:install", "--path", "/control", "--authentication=host", "--authentication-adapter=NewadminHostAdapter" ], host, environment)
       execute.call([ ruby, "bin/rails", "runner", File.join(root, "scripts/host_production_smoke.rb") ], host, production)
+      if ENV["NEWADMIN_BROWSER_CHECK"] == "1"
+        require_relative "../test/browser/packaged_navigation"
+        PackagedNavigation.run(root: root, host: host, ruby: ruby, execute: execute, production: production)
+      end
     end
   end
 end

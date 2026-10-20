@@ -15,3 +15,4 @@ gem "rubocop-rails-omakase", "~> 1.0", require: false
 gem "bundler-audit", "~> 0.9", require: false
 gem "redis", "~> 5.0", require: false
 gem "yard", "~> 0.9", require: false
+gem "importmap-rails", "2.2.2", require: false

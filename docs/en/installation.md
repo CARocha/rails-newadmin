@@ -44,3 +44,5 @@ Review `config/routes.rb`: if a customized mount was preserved, remove it manual
 Reinstall with `bin/rails generate rails_newadmin:install` (or `--path /control` for another path). Existing migrations are reused and customizations are retained. Repeating installation or reversal does not duplicate migrations.
 
 For an existing application login, follow [Use an existing Rails login](authentication.md#use-an-existing-rails-login) instead of creating a builtin account.
+
+For host JavaScript and deployment prefixes, see [Navigation and assets](navigation.md).

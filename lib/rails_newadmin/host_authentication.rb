@@ -35,7 +35,7 @@ module RailsNewadmin
         raise ConfigurationError, "Host authentication paths must be local absolute paths"
       end
       pathname = URI.parse(path).path
-      decoded = URI::DEFAULT_PARSER.unescape(pathname)
+      decoded = URI::RFC2396_PARSER.unescape(pathname)
       if decoded.split("/").any? { |part| part == "." || part == ".." } || /%(?:2f|5c|25)/i.match?(pathname)
         raise ConfigurationError, "Host authentication paths cannot contain dot segments or encoded separators"
       end

@@ -11,6 +11,7 @@ authentication
 permissions
 appearance
 dashboards
+navigation
 production
 troubleshooting
 ```

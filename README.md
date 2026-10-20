@@ -47,6 +47,7 @@ end
 - [Groups, permissions and audit](docs/en/permissions.md)
 - [Appearance and locale](docs/en/appearance.md)
 - [Dashboards and charts](docs/en/dashboards.md)
+- [Host navigation, importmap/esbuild and deployment prefixes](docs/en/navigation.md)
 - [Production configuration](docs/en/production.md)
 - [Troubleshooting and upgrades](docs/en/troubleshooting.md)
 

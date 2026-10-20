@@ -44,3 +44,5 @@ Revisa `config/routes.rb`: si el montaje se conservó porque lo personalizaste, 
 Puedes reinstalar con `bin/rails generate rails_newadmin:install` (o `--path /control` para otra ruta). Se reutilizan las migraciones existentes y se conservan las personalizaciones. Repetir la instalación o la reversión no duplica migraciones.
 
 Para reutilizar el login de tu aplicación, sigue [Usar el login existente de Rails](authentication.md#usar-el-login-existente-de-rails) en lugar de crear una cuenta builtin.
+
+Para JavaScript del host y prefijos de despliegue, consulta [Navegación y assets](navigation.md).

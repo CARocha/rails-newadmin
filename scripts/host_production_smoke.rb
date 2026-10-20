@@ -40,7 +40,9 @@ begin
   session.get mount
   token = Nokogiri::HTML(session.response.body).at_css('meta[name="csrf-token"]')["content"]
   session.delete "/session", headers: { "X-CSRF-Token" => token }
-  raise "Host logout failed: HTTP #{session.response.status}, sessions #{user.sessions.count}" unless session.response.status == 303 && user.sessions.empty?
+  # The inspected Rails 8.0 template redirects with 302; Rails 8.1 uses 303.
+  logout_status = Rails.gem_version >= Gem::Version.new("8.1") ? 303 : 302
+  raise "Host logout failed: HTTP #{session.response.status}, sessions #{user.sessions.count}" unless session.response.status == logout_status && user.sessions.empty? && URI(session.response.location).path == "/session/new"
   session.get mount
   raise "Host session survived logout" unless session.response.status == 302 && URI(session.response.location).path == "/session/new"
   puts "Packaged native Rails host login, default deny, identity, CSRF CRUD, audit, logout and compiled assets: passed"

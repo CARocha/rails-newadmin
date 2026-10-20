@@ -15,6 +15,6 @@ RailsNewadmin.configure { |config| config.rate_limit_store = Rails.cache }
 
 Configure actual mail transport and a durable Active Job queue; fictional test deliveries do not certify your SMTP. Redact upstream tokens/query logs. Run `RAILS_ENV=production bin/rails assets:precompile` and serve `public/assets` through your application infrastructure. Bundles are already compiled; Node is unnecessary.
 
-The engine layout owns a Turbo instance. Leaving that layout reloads the page. If the host also runs Turbo, set `data-turbo="false"` on host links entering the admin and verify back/forward navigation. A specific importmap/bundler host recipe still requires its own test before claiming support.
+Host/engine layout navigation is verified with importmap and esbuild, including alternate mounts and a deployment prefix. Follow [Navigation and assets](navigation.md) to configure links and keep a single Turbo runtime.
 
 Do not widen the Rails range to 8.2/9 without the matrix. Ruby 3.4 is the floor; satisfying the gemspec alone does not certify future Rubies. This alpha was exercised on Ruby 3.4.8.

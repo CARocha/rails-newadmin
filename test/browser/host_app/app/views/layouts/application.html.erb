@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Host fixture</title><%= csrf_meta_tags %><link rel="icon" href="data:,">
+<% if ENV.fetch("NAVIGATION_JS") == "importmap" %><%= javascript_importmap_tags %>
+<% else %><%= javascript_include_tag "host_bundle", defer: true, data: { turbo_track: "reload" } %><% end %>
+</head><body data-controller="host-counter"><%= yield %></body></html>

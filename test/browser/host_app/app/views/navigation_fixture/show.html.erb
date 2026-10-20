@@ -1,0 +1,6 @@
+<h1>Host application</h1>
+<%= link_to "Host second page", host_second_path, id: "host-second" %>
+<%= link_to "Host home", root_path, id: "host-home" %>
+<%= link_to "Admin with full navigation", rails_newadmin.root_path, id: "admin-entry", data: { turbo: false } %>
+<%= link_to "Admin plain link", rails_newadmin.root_path, id: "admin-plain" %>
+<button data-action="host-counter#increment" id="host-increment">Increment</button><output data-host-counter-target="value">0</output>

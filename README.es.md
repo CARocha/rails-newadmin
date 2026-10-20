@@ -47,6 +47,7 @@ end
 - [Grupos, permisos y auditoría](docs/es/permissions.md)
 - [Apariencia e idioma](docs/es/appearance.md)
 - [Dashboards y gráficos](docs/es/dashboards.md)
+- [Navegación, importmap/esbuild y prefijos de despliegue](docs/es/navigation.md)
 - [Configuración de producción](docs/es/production.md)
 - [Resolución de problemas y actualizaciones](docs/es/troubleshooting.md)
 
