@@ -49,6 +49,7 @@ end
 - [Dashboards and charts](docs/en/dashboards.md)
 - [Host navigation, importmap/esbuild and deployment prefixes](docs/en/navigation.md)
 - [Keyboard, tables, validation and accessibility customization](docs/en/accessibility.md)
+- [Preloads, queries and performance instrumentation](docs/en/performance.md)
 - [Production configuration](docs/en/production.md)
 - [Troubleshooting and upgrades](docs/en/troubleshooting.md)
 

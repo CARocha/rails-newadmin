@@ -47,3 +47,5 @@ El alcance también restringe a superusuarios. Un ID fuera de alcance devuelve 4
 Las asociaciones `belongs_to` editables necesitan un recurso relacionado, por ejemplo `relation :category, resource: "categories"`, además de `fields/permit :category_id`. La gema verifica permiso de lectura, política y alcance del destino. Las opciones se consultan de 20 en 20, con búsqueda. Las relaciones polimórficas no tienen soporte declarado.
 
 La página normal contiene 25 filas y admite hasta 100, con orden estable. Filtros y orden solo usan listas explícitas. Si tu modelo tiene `lock_version`, el formulario detecta ediciones y confirmaciones de borrado obsoletas con HTTP 409. Un borrado con dependientes se presenta como un error recuperable.
+
+Consulta [precargas y coste de consultas](performance.md) si tus políticas acceden a asociaciones.

@@ -13,6 +13,7 @@ appearance
 dashboards
 navigation
 accessibility
+performance
 production
 troubleshooting
 ```

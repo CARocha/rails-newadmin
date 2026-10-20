@@ -8,7 +8,7 @@ module RailsNewadmin
 
     def index
       @query = Query.new(@access, params)
-      @records, @total = @query.records, @query.count
+      @records, @total = instrument_query(@resource, "list", @query) { [ @query.records.load, @query.count ] }
     end
 
     def show; end
@@ -130,12 +130,30 @@ module RailsNewadmin
       return [] unless target_resource.model_class == reflection.klass
       target_access = resource_access(target_resource)
       return [] unless target_access.allowed?(:view)
-      records = Query.new(target_access, { q: params[:q].to_s, page: params[:page], per_page: 20 }).records.to_a
-      if selected_id.present? && records.none? { |record| record.id.to_s == selected_id.to_s }
-        selected = target_access.scope.find_by(target_resource.model_class.primary_key => selected_id)
-        records.unshift(selected) if selected && target_access.allowed?(:view, selected)
+      query = Query.new(target_access, { q: params[:q].to_s, page: params[:page], per_page: 20 })
+      instrument_query(target_resource, "options", query) do
+        records = query.records.to_a
+        if selected_id.present? && records.none? { |record| record.id.to_s == selected_id.to_s }
+          selected = target_access.scope.find_by(target_resource.model_class.primary_key => selected_id)
+          records.unshift(selected) if selected && target_access.allowed?(:view, selected)
+        end
+        records
       end
-      records
+    end
+
+    def instrument_query(resource, operation, query)
+      payload = { resource_key: resource.resource_key, operation: operation, page: query.page,
+        per_page: query.per_page, request_id: request.request_id, success: false }
+      # The handle API retains timings without adding SQL exception messages/objects to the payload.
+      handle = ActiveSupport::Notifications.instrumenter.build_handle("query.rails_newadmin", payload)
+      handle.start
+      begin
+        result = yield
+        payload[:success] = true
+        result
+      ensure
+        handle.finish
+      end
     end
 
     def pagination_parameters

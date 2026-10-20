@@ -49,6 +49,7 @@ end
 - [Dashboards y gráficos](docs/es/dashboards.md)
 - [Navegación, importmap/esbuild y prefijos de despliegue](docs/es/navigation.md)
 - [Teclado, tablas, validación y personalización accesible](docs/es/accessibility.md)
+- [Precargas, consultas y observación del rendimiento](docs/es/performance.md)
 - [Configuración de producción](docs/es/production.md)
 - [Resolución de problemas y actualizaciones](docs/es/troubleshooting.md)
 

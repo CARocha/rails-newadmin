@@ -47,3 +47,5 @@ Scopes apply to superusers too. Out-of-scope IDs return 404; missing grants retu
 Writable `belongs_to` fields require a related resource declaration, for example `relation :category, resource: "categories"`, plus `fields/permit :category_id`. Target read grants, policy and scope are checked. Options are searched and paginated in batches of 20. Polymorphic relations are outside the supported contract.
 
 Default page size is 25, maximum 100, with stable ordering. Search/filter/sort fields are explicitly allowlisted. A model with `lock_version` detects stale edits and delete confirmations with HTTP 409. Dependent-record deletion restrictions are recoverable errors.
+
+See [preloads and query cost](performance.md) if your policies access associations.

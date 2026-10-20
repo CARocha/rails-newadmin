@@ -66,6 +66,7 @@ jobs:
       - run: npm audit --audit-level=high
       - run: npm run build
       - run: git diff --exit-code -- app/assets/builds
+      - run: bundle exec ruby scripts/asset_budget_check.rb
       - run: RAILS_ENV=test bundle exec rails db:migrate
       - run: RAILS_ENV=development bundle exec ruby test/development/reload_check.rb
       - run: bundle exec ruby scripts/shared_rate_limit_check.rb
@@ -118,6 +119,40 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium firefox webkit
       - run: bundle exec ruby test/browser/accessibility_check.rb
+  query_budgets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        gemfile: [Gemfile, gemfiles/rails_8_0.gemfile]
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 10s
+          --health-timeout 5s --health-retries 5
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
+      NEWADMIN_PG_ADMIN_URL: postgresql://postgres:postgres@127.0.0.1/postgres
+      NEWADMIN_REDIS_URL: redis://127.0.0.1:6379/0
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+      - run: bundle exec ruby scripts/performance_check.rb
   documentation:
     runs-on: ubuntu-latest
     steps:
