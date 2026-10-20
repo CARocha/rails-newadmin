@@ -25,3 +25,20 @@ El recurso recién generado está cerrado. Abre su política y sus campos siguie
 Si recibes un archivo `.gem`, puedes instalarlo en el entorno Ruby activo con `gem install /ruta/rails-newadmin-0.1.0.alpha.1.gem`, declarar esa versión en el Gemfile con `require: "rails/newadmin"` y ejecutar `bundle install --local`. Las dependencias deben estar instaladas o descargarse de RubyGems. La aplicación no necesita npm ni Python.
 
 Esta alfa se instala desde GitHub. `gem install rails-newadmin` requiere una versión publicada en RubyGems.
+
+## Revertir la instalación
+
+Desde la aplicación Rails puedes previsualizar y ejecutar la reversión:
+
+```sh
+bin/rails destroy rails_newadmin:install --pretend
+bin/rails destroy rails_newadmin:install
+```
+
+Se retiran el initializer y el montaje creados por el instalador cuando siguen sin editar. No necesitas repetir `--path` para retirar un montaje generado en otra ruta. Las configuraciones y rutas editadas o preexistentes se conservan y el comando indica que debes revisarlas manualmente. Las instalaciones antiguas que no permiten identificar el origen de esos archivos también se conservan.
+
+**Las migraciones, tablas, cuentas, permisos y datos se conservan siempre.** El comando no ejecuta una reversión de base de datos ni borra modelos, recursos o políticas de tu aplicación. No elimines una migración aplicada como parte de esta limpieza.
+
+Revisa `config/routes.rb`: si el montaje se conservó porque lo personalizaste, retíralo manualmente para deshabilitar el acceso al panel. Antes de quitar la gema del Gemfile, retira también las referencias restantes al engine en la configuración.
+
+Puedes reinstalar con `bin/rails generate rails_newadmin:install` (o `--path /control` para otra ruta). Se reutilizan las migraciones existentes y se conservan las personalizaciones. Repetir la instalación o la reversión no duplica migraciones.

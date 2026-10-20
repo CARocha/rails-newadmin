@@ -56,6 +56,19 @@ File.open(log_path, "w") do |log|
         [ "generate", "rails_newadmin:resource", "Article", "--single-site", "--permit", "title", "body", "status" ] ].each do |arguments|
         execute.call([ ruby, bundle, "exec", "ruby", "bin/rails", *arguments ], host, environment)
       end
+      # Verify the real destroy command after migrations and application data exist.
+      seed = 'Article.create!(title: "Installer retained data", status: "draft"); RailsNewadmin::AdminUser.create!(email_address: "retained@example.test", password: SecureRandom.base64(24), staff: true)'
+      execute.call([ ruby, bundle, "exec", "ruby", "bin/rails", "runner", seed ], host, environment)
+      migration_files = Dir[File.join(host, "db/migrate/*.rb")].to_h { |path| [ path, File.binread(path) ] }
+      2.times { execute.call([ ruby, bundle, "exec", "ruby", "bin/rails", "destroy", "rails_newadmin:install" ], host, environment) }
+      raise "Destroy retained an unchanged initializer" if File.exist?(File.join(host, "config/initializers/rails_newadmin.rb"))
+      raise "Destroy retained an unchanged mount" if File.read(File.join(host, "config/routes.rb")).include?("mount RailsNewadmin::Engine")
+      raise "Destroy changed migration history" unless migration_files == Dir[File.join(host, "db/migrate/*.rb")].to_h { |path| [ path, File.binread(path) ] }
+      raise "Destroy removed a business resource" unless File.file?(File.join(host, "app/admin/resources/article_resource.rb"))
+      execute.call([ ruby, bundle, "exec", "ruby", "bin/rails", "generate", "rails_newadmin:install", "--path", "/control" ], host, environment)
+      retained = 'abort "Installer changed persisted data" unless Article.exists?(title: "Installer retained data") && RailsNewadmin::AdminUser.exists?(email_address: "retained@example.test")'
+      execute.call([ ruby, bundle, "exec", "ruby", "bin/rails", "runner", retained ], host, environment)
+      raise "Reinstall changed migration history" unless migration_files == Dir[File.join(host, "db/migrate/*.rb")].to_h { |path| [ path, File.binread(path) ] }
       production = environment.merge("RAILS_ENV" => "production", "RAILS_LOG_LEVEL" => "warn",
         "SECRET_KEY_BASE" => SecureRandom.hex(64), "PACKAGED_ROOT" => package_root, "VERIFY_WITHOUT_NODE" => "1",
         "PATH" => "#{File.dirname(ruby)}:/usr/bin:/bin")
@@ -65,4 +78,4 @@ File.open(log_path, "w") do |log|
     end
   end
 end
-puts "Real package, repeatable installer and production without Node: passed"
+puts "Real package, install/destroy/reinstall with retained data and production without Node: passed"

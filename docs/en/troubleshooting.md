@@ -12,4 +12,4 @@
 
 There is no prior public version for a real upgrade rehearsal yet. For future alphas: back up, read the changelog, update the bundle, copy new engine migrations with `bin/rails rails_newadmin:install:migrations`, migrate, sync permissions, precompile and check policies/overrides in staging. Do not delete applied migrations or restore only old code over an incompatible schema.
 
-Uninstall by removing the mount and dependency after backing up. Tables are not dropped automatically; data deletion requires an explicit maintainer decision.
+To remove the integration, follow [Reverse the installation](installation.md#reverse-the-installation). `bin/rails destroy rails_newadmin:install` retains migrations and data, removing only unchanged generated entries. Review preserved files before removing the dependency.

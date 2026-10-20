@@ -12,4 +12,4 @@
 
 No existe todavía una versión anterior pública desde la que ensayar una actualización. Para futuras alfas: copia de seguridad, consulta changelog, actualiza bundle, instala las nuevas migraciones del engine con `bin/rails rails_newadmin:install:migrations`, migra, sincroniza permisos, recompila assets y verifica políticas/overrides en staging. No borres migraciones aplicadas ni restaures solo el código sobre un esquema incompatible.
 
-Para desinstalar: retira el montaje y la dependencia después de respaldar datos. Las tablas no se borran automáticamente; cualquier eliminación de datos debe ser una decisión explícita del mantenedor.
+Para retirar la integración, sigue [Revertir la instalación](installation.md#revertir-la-instalación). `bin/rails destroy rails_newadmin:install` conserva migraciones y datos, y solo retira archivos generados sin editar. Revisa los archivos conservados antes de quitar la dependencia.

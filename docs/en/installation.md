@@ -25,3 +25,20 @@ A generated resource is closed. Configure its policy and fields using [Resources
 For a supplied `.gem`, run `gem install /path/rails-newadmin-0.1.0.alpha.1.gem`, declare that version with `require: "rails/newadmin"` in the Gemfile, then `bundle install --local`. Dependencies must already exist or be downloaded from RubyGems. Consumers need neither npm nor Python.
 
 Install this alpha from GitHub. `gem install rails-newadmin` requires a release published to RubyGems.
+
+## Reverse the installation
+
+From the Rails application, preview and run the reversal:
+
+```sh
+bin/rails destroy rails_newadmin:install --pretend
+bin/rails destroy rails_newadmin:install
+```
+
+The installer removes its generated initializer and mount only while they remain unchanged. You do not need to repeat `--path` to remove a generated alternate mount. Edited or pre-existing configuration and routes are preserved, with a message to review them manually. Older installations whose files cannot be identified as generated are preserved too.
+
+**Migrations, tables, accounts, permissions and data are always retained.** The command neither rolls back the database nor removes your application's models, resources or policies. Do not delete an applied migration as part of this cleanup.
+
+Review `config/routes.rb`: if a customized mount was preserved, remove it manually to disable access to the panel. Before removing the gem from the Gemfile, remove remaining engine references from application configuration too.
+
+Reinstall with `bin/rails generate rails_newadmin:install` (or `--path /control` for another path). Existing migrations are reused and customizations are retained. Repeating installation or reversal does not duplicate migrations.

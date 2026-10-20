@@ -8,5 +8,8 @@
 - CRUD, bounded relation search, optimistic edits, atomic field-name audit.
 - NewAdmin palettes, local assets, ES/EN, responsive layout, optional scoped charts.
 - Install/resource generators and bilingual Sphinx documentation.
+- Safe installer reversal preserves customized files, migration history and data; install/destroy/reinstall is verified on a packaged application.
+
+La reversión del instalador conserva personalizaciones, migraciones y datos. Se puede previsualizar con `bin/rails destroy rails_newadmin:install --pretend`.
 
 Administrador independiente con autenticación nativa, permisos explícitos, CRUD acotado, auditoría, estilos NewAdmin, generadores y manual bilingüe. Consulta las guías de instalación y configuración para usar esta versión.
