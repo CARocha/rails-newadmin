@@ -20,3 +20,10 @@ __pycache__/
 /.yardoc/
 /site/
 /.venv-docs/
+
+.DS_Store
+*.sqlite3
+*.sqlite3-*
+/test/dummy/storage/
+**/config/master.key
+**/config/credentials/*.key

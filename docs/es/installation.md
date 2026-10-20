@@ -1,11 +1,11 @@
 # Instalación
 
-Esta guía corresponde a la alfa local 0.1.0.alpha.1. Requiere Ruby 3.4+, una aplicación Rails completa 8.0 o 8.1, Active Record, Action Mailer y Propshaft. Los ejemplos parten de un modelo `Article` existente. No se soportan aplicaciones API-only sin añadir la pila HTML/sesiones.
+Esta guía corresponde a la alfa de desarrollo 0.1.0.alpha.1. Requiere Ruby 3.4+, una aplicación Rails completa 8.0 o 8.1, Active Record, Action Mailer y Propshaft. Los ejemplos parten de un modelo `Article` existente. No se soportan aplicaciones API-only sin añadir la pila HTML/sesiones.
 
-Hasta la publicación, añade la ruta del repositorio al Gemfile:
+Hasta publicarla en RubyGems, instala desde GitHub. La rama `main` contiene el desarrollo de la alfa:
 
 ```ruby
-gem "rails-newadmin", path: "/ruta/absoluta/rails-newadmin", require: "rails/newadmin"
+gem "rails-newadmin", git: "https://github.com/CARocha/rails-newadmin.git", branch: "main", require: "rails/newadmin"
 ```
 
 ```sh

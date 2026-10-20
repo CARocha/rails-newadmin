@@ -8,7 +8,11 @@ Gem::Specification.new do |spec|
   spec.authors = [ "CARocha" ]
   spec.summary = "An independent Rails admin with the NewAdmin design and explicit permissions."
   spec.description = "A mountable Rails administration engine with local assets, scoped resource policies and Spanish/English interfaces."
-  spec.homepage = "https://github.com/CARocha"
+  spec.homepage = "https://github.com/CARocha/rails-newadmin"
+  spec.metadata["source_code_uri"] = spec.homepage
+  spec.metadata["bug_tracker_uri"] = "#{spec.homepage}/issues"
+  spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/main/CHANGELOG.md"
+  spec.metadata["documentation_uri"] = "#{spec.homepage}/tree/main/docs"
   spec.license = "BSD-3-Clause"
   spec.required_ruby_version = ">= 3.4"
   spec.metadata["rubygems_mfa_required"] = "true"

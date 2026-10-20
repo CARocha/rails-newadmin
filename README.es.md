@@ -1,6 +1,6 @@
 # rails-newadmin
 
-Administrador independiente para Rails con la identidad visual de NewAdmin. **Ruby 3.4+; Rails 8.0–8.1.** Alfa local `0.1.0.alpha.1`; todavía no está publicada en RubyGems.
+Administrador independiente para Rails con la identidad visual de NewAdmin. **Ruby 3.4+; Rails 8.0–8.1.** Alfa de desarrollo `0.1.0.alpha.1`; todavía no está publicada en RubyGems.
 
 [English](README.md) · [Manual en español](docs/es/index.md) · [Verificación y límites](VERIFICATION.md)
 
@@ -8,10 +8,10 @@ Incluye cuentas independientes con primitivas de Rails, sin Devise; permisos por
 
 ## Probar en una aplicación Rails completa
 
-Añade al Gemfile de tu aplicación, mientras no esté publicada:
+Hasta publicarla en RubyGems, añade el repositorio de GitHub al Gemfile de tu aplicación. La rama `main` contiene el desarrollo de la alfa:
 
 ```ruby
-gem "rails-newadmin", path: "/ruta/absoluta/rails-newadmin", require: "rails/newadmin"
+gem "rails-newadmin", git: "https://github.com/CARocha/rails-newadmin.git", branch: "main", require: "rails/newadmin"
 ```
 
 ```sh

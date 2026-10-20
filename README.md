@@ -1,6 +1,6 @@
 # rails-newadmin
 
-Independent Rails administration with the NewAdmin visual identity. Ruby **3.4+**; Rails **8.0–8.1**. Local development alpha `0.1.0.alpha.1`, not published to RubyGems yet.
+Independent Rails administration with the NewAdmin visual identity. Ruby **3.4+**; Rails **8.0–8.1**. Development alpha `0.1.0.alpha.1`, not published to RubyGems yet.
 
 [Español](README.es.md) · [English manual](docs/en/index.md) · [Verification and limits](VERIFICATION.md)
 
@@ -8,10 +8,10 @@ A mountable engine with independent accounts (Rails `has_secure_password`, no De
 
 ## Try it in an existing full Rails application
 
-Add the local checkout to your application's Gemfile until publication:
+Until the RubyGems release, add the GitHub repository to your application's Gemfile. The `main` branch follows alpha development:
 
 ```ruby
-gem "rails-newadmin", path: "/absolute/path/to/rails-newadmin", require: "rails/newadmin"
+gem "rails-newadmin", git: "https://github.com/CARocha/rails-newadmin.git", branch: "main", require: "rails/newadmin"
 ```
 
 ```sh
