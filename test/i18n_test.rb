@@ -16,6 +16,8 @@ class I18nTest < ActiveSupport::TestCase
     assert_equal locales.first, locales.last
   end
   test "concurrent anonymous requests keep their locale isolated" do
+    # Rails 8.0 lazy route loading is not the concurrency behavior under test.
+    Rails.application.reload_routes_unless_loaded
     initial = I18n.locale
     results = %w[es en].map do |locale|
       Thread.new do
