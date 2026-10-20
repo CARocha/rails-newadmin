@@ -24,4 +24,4 @@ A generated resource is closed. Configure its policy and fields using [Resources
 
 For a supplied `.gem`, run `gem install /path/rails-newadmin-0.1.0.alpha.1.gem`, declare that version with `require: "rails/newadmin"` in the Gemfile, then `bundle install --local`. Dependencies must already exist or be downloaded from RubyGems. Consumers need neither npm nor Python.
 
-RubyGems.org is the gem registry, serving a purpose similar to PyPI. Building a file or repository does not reserve a gem name. Check availability before publishing; this alpha is not publicly published yet.
+Install this alpha from GitHub. `gem install rails-newadmin` requires a release published to RubyGems.

@@ -1,18 +1,20 @@
 # rails-newadmin
 
-Independent Rails administration with the NewAdmin visual identity. Ruby **3.4+**; Rails **8.0–8.1**. Development alpha `0.1.0.alpha.1`, not published to RubyGems yet.
+Independent Rails administration with the NewAdmin visual identity. **Ruby 3.4+ · Rails 8.0–8.1**. Development alpha `0.1.0.alpha.1`, not yet published to RubyGems.
 
-[Español](README.es.md) · [English manual](docs/en/index.md) · [Verification and limits](VERIFICATION.md)
+[Español](README.es.md) · [User manual](docs/en/index.md)
 
-A mountable engine with independent accounts (Rails `has_secure_password`, no Devise), group permissions, explicit policy scopes, CRUD, transactional audit, Spanish/English UI, light/dark/automatic theme and optional local ECharts dashboards. The palettes and system typography come from django-newadmin; this is a new administration engine rather than a skin for another gem.
+Manage Active Record resources with independent accounts, group permissions, scoped policies, CRUD and audit history. Includes Spanish/English interfaces, light/dark/automatic appearance and optional dashboards with local charts. Authentication uses Rails primitives without Devise.
 
-## Try it in an existing full Rails application
+## Install
 
-Until the RubyGems release, add the GitHub repository to your application's Gemfile. The `main` branch follows alpha development:
+Add the GitHub repository to your application's Gemfile:
 
 ```ruby
 gem "rails-newadmin", git: "https://github.com/CARocha/rails-newadmin.git", branch: "main", require: "rails/newadmin"
 ```
+
+The `main` branch follows alpha development. Use a full Rails application with Active Record, Action Mailer and Propshaft.
 
 ```sh
 bundle install
@@ -23,22 +25,31 @@ bin/rails rails_newadmin:permissions:sync
 bin/rails rails_newadmin:admin:create
 ```
 
-`Article` must already exist. The generated policy denies access and write fields are empty until you explicitly configure both. Start Rails and visit `/admin`. Follow the [resource guide](docs/en/resources.md) before enabling data access. No models are discovered or exposed automatically, and a superuser never bypasses policy scope.
+`Article` must already exist. The account task prompts for credentials; there are no default accounts. The generated resource policy starts closed and permits no writes. Configure its [policy and fields](docs/en/resources.md), start Rails, then visit `/admin`. Models are never automatically exposed, and superusers remain subject to policy scopes.
 
-Consumers use the packaged, precompiled assets with Propshaft: no Node, Sass, Python or Sphinx at runtime. Development of the gem uses Node to rebuild assets; documentation uses Sphinx.
+Consumers use packaged assets and do not need Node, Sass, Python or Sphinx.
 
-## Development
+## Configure
 
-```sh
-bundle install
-bundle exec rails db:migrate RAILS_ENV=test
-bundle exec rake test
-COVERAGE=1 bundle exec rake test
-bundle exec rubocop
-npm ci
-npm run build
+The installer creates `config/initializers/rails_newadmin.rb`:
+
+```ruby
+RailsNewadmin.configure do |config|
+  config.site_title = "My administration"
+  config.default_locale = :en
+  config.default_mode = :auto
+end
 ```
 
-See [contributing](docs/en/contributing.md), [security](SECURITY.md), [changelog](CHANGELOG.md) and [current status](STATUS.md). Production requires a shared atomic rate-limit store and configured email delivery. Host-login integration, advanced exports, bulk operations and uploads are future work. This alpha is not a 1.0 certification.
+- [Installation and alternate mount paths](docs/en/installation.md)
+- [Resources, policies and relations](docs/en/resources.md)
+- [Accounts and password recovery](docs/en/authentication.md)
+- [Groups, permissions and audit](docs/en/permissions.md)
+- [Appearance and locale](docs/en/appearance.md)
+- [Dashboards and charts](docs/en/dashboards.md)
+- [Production configuration](docs/en/production.md)
+- [Troubleshooting and upgrades](docs/en/troubleshooting.md)
 
-BSD-3-Clause. Vendored components retain their own licenses; see [NOTICE](NOTICE).
+Production requires HTTPS, shared atomic rate-limit storage and configured mail delivery. This alpha uses independent admin accounts. Host-login adapters, exports, bulk actions and uploads are unavailable.
+
+[Security](SECURITY.md) · [Changelog](CHANGELOG.md) · [BSD-3-Clause license](LICENSE). Bundled components retain their own licenses; see [NOTICE](NOTICE).

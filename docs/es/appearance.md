@@ -15,4 +15,4 @@ El control de apariencia alterna auto/claro/oscuro y conserva la preferencia loc
 
 Puedes sobrescribir variables `--newadmin-*` desde una hoja propia cargada después del CSS del engine. Editar los archivos precompilados de la gema dificulta las actualizaciones; personaliza tokens o vistas de forma explícita. La capa visual está bajo `.newadmin-*`, aunque el diseño de un host con assets propios requiere comprobar la frontera de navegación y sus overrides.
 
-Hay etiquetas, foco visible, mensajes de error, tablas con encabezados y reflow móvil. La prueba automatizada en Chromium no equivale a una certificación WCAG; falta revisión con lectores de pantalla y más navegadores antes de 1.0.
+Hay etiquetas, foco visible, mensajes de error, tablas con encabezados y reflow móvil. No se declara una certificación WCAG ni compatibilidad verificada con todos los lectores de pantalla y navegadores.

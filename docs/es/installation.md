@@ -24,4 +24,4 @@ El recurso recién generado está cerrado. Abre su política y sus campos siguie
 
 Si recibes un archivo `.gem`, puedes instalarlo en el entorno Ruby activo con `gem install /ruta/rails-newadmin-0.1.0.alpha.1.gem`, declarar esa versión en el Gemfile con `require: "rails/newadmin"` y ejecutar `bundle install --local`. Las dependencias deben estar instaladas o descargarse de RubyGems. La aplicación no necesita npm ni Python.
 
-RubyGems.org es el registro de publicación de gemas, equivalente en propósito a PyPI. El nombre no queda reservado por crear el repositorio o construir un archivo: hay que comprobarlo antes de publicar. No uses aún una instrucción que sugiera que esta alfa ya está disponible públicamente.
+Esta alfa se instala desde GitHub. `gem install rails-newadmin` requiere una versión publicada en RubyGems.

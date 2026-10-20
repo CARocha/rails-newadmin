@@ -30,3 +30,17 @@ __pycache__/
 
 # Private local planning notes
 /tasks/
+
+# Internal development documents and local reports
+/docs/planning/
+/docs/es/contributing.md
+/docs/en/contributing.md
+/docs/api-README.md
+/SPEC.md
+/CONSTRAINTS.md
+/STATUS.md
+/VERIFICATION.md
+/evidence/
+/preview/
+/PRIVATE_DEVELOPMENT.md
+/AGENTS.md

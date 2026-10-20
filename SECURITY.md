@@ -10,4 +10,4 @@ Use HTTPS, correctly configured trusted proxies, a shared atomic rate-limit cach
 
 Sessions have 12-hour absolute and 30-minute idle defaults; password changes and deactivation revoke them. Audit stores field names and identifiers, not changed values. Define an app-specific retention and cleanup job for audit and expired session rows; this alpha does not schedule deletion for you.
 
-Run dependency audits before a release. No claim of an external penetration test, MFA, compliance certification, cross-browser WCAG certification or production readiness is made.
+No claim of an external penetration test, MFA, compliance certification, cross-browser WCAG certification or production readiness is made.

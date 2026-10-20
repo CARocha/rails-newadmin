@@ -9,4 +9,4 @@
 - NewAdmin palettes, local assets, ES/EN, responsive layout, optional scoped charts.
 - Install/resource generators and bilingual Sphinx documentation.
 
-Administrador independiente con autenticación nativa, permisos explícitos, CRUD acotado, auditoría, estilos NewAdmin, generadores y manual bilingüe. Consulte VERIFICATION.md para distinguir resultados comprobados de tareas pendientes.
+Administrador independiente con autenticación nativa, permisos explícitos, CRUD acotado, auditoría, estilos NewAdmin, generadores y manual bilingüe. Consulta las guías de instalación y configuración para usar esta versión.

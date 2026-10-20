@@ -1,18 +1,20 @@
 # rails-newadmin
 
-Administrador independiente para Rails con la identidad visual de NewAdmin. **Ruby 3.4+; Rails 8.0–8.1.** Alfa de desarrollo `0.1.0.alpha.1`; todavía no está publicada en RubyGems.
+Administrador independiente para Rails con la identidad visual de NewAdmin. **Ruby 3.4+ · Rails 8.0–8.1**. Alfa de desarrollo `0.1.0.alpha.1`, todavía sin publicar en RubyGems.
 
-[English](README.md) · [Manual en español](docs/es/index.md) · [Verificación y límites](VERIFICATION.md)
+[English](README.md) · [Manual de uso](docs/es/index.md)
 
-Incluye cuentas independientes con primitivas de Rails, sin Devise; permisos por grupos; políticas y consultas con alcance explícito; CRUD; auditoría transaccional; interfaz ES/EN; temas claro, oscuro y automático; y gráficos ECharts locales opcionales. Conserva las paletas y tipografía de django-newadmin.
+Administra recursos Active Record con cuentas independientes, permisos por grupos, políticas con alcance, CRUD e historial de auditoría. Incluye interfaz ES/EN, apariencia clara/oscura/automática y dashboards opcionales con gráficos locales. La autenticación usa primitivas de Rails sin Devise.
 
-## Probar en una aplicación Rails completa
+## Instalar
 
-Hasta publicarla en RubyGems, añade el repositorio de GitHub al Gemfile de tu aplicación. La rama `main` contiene el desarrollo de la alfa:
+Añade el repositorio de GitHub al Gemfile de tu aplicación:
 
 ```ruby
 gem "rails-newadmin", git: "https://github.com/CARocha/rails-newadmin.git", branch: "main", require: "rails/newadmin"
 ```
+
+La rama `main` contiene el desarrollo de la alfa. Usa una aplicación Rails completa con Active Record, Action Mailer y Propshaft.
 
 ```sh
 bundle install
@@ -23,20 +25,31 @@ bin/rails rails_newadmin:permissions:sync
 bin/rails rails_newadmin:admin:create
 ```
 
-`Article` debe existir. El generador deja la política cerrada y ningún atributo editable: configura ambos siguiendo la [guía de recursos](docs/es/resources.md). Arranca Rails y visita `/admin`. Los modelos nunca se exponen automáticamente y un superusuario también queda sujeto al alcance de su política.
+`Article` debe existir. La tarea de cuentas pide las credenciales en la terminal; no hay cuentas predeterminadas. El recurso generado empieza con la política cerrada y ningún campo editable. Configura su [política y campos](docs/es/resources.md), arranca Rails y visita `/admin`. Los modelos nunca se exponen automáticamente y los superusuarios también están sujetos al alcance de las políticas.
 
-La aplicación consumidora usa assets precompilados con Propshaft; no necesita Node, Sass, Python ni Sphinx. Esas herramientas solo intervienen al desarrollar la gema o generar su documentación.
+La aplicación usa assets empaquetados y no necesita Node, Sass, Python ni Sphinx.
 
-```sh
-bundle install
-bundle exec rails db:migrate RAILS_ENV=test
-bundle exec rake test
-COVERAGE=1 bundle exec rake test
-bundle exec rubocop
-npm ci
-npm run build
+## Configurar
+
+El instalador crea `config/initializers/rails_newadmin.rb`:
+
+```ruby
+RailsNewadmin.configure do |config|
+  config.site_title = "Mi administración"
+  config.default_locale = :es
+  config.default_mode = :auto
+end
 ```
 
-Consulta [contribución](docs/es/contributing.md), [seguridad](SECURITY.md), [cambios](CHANGELOG.md) y [estado actual](STATUS.md). Producción requiere un almacén compartido y atómico para limitar intentos y un servicio de correo configurado. La integración con un login existente del host, exportaciones, acciones masivas y archivos quedan para etapas posteriores. Esta alfa no es una certificación 1.0.
+- [Instalación y rutas de montaje](docs/es/installation.md)
+- [Recursos, políticas y relaciones](docs/es/resources.md)
+- [Cuentas y recuperación de contraseña](docs/es/authentication.md)
+- [Grupos, permisos y auditoría](docs/es/permissions.md)
+- [Apariencia e idioma](docs/es/appearance.md)
+- [Dashboards y gráficos](docs/es/dashboards.md)
+- [Configuración de producción](docs/es/production.md)
+- [Resolución de problemas y actualizaciones](docs/es/troubleshooting.md)
 
-Licencia BSD-3-Clause; dependencias con sus licencias en [NOTICE](NOTICE).
+Producción requiere HTTPS, un almacén compartido con incremento atómico para limitar intentos y entrega de correo configurada. Esta alfa usa cuentas administrativas independientes. No incluye adaptador al login del host, exportaciones, acciones masivas ni subida de archivos.
+
+[Seguridad](SECURITY.md) · [Cambios](CHANGELOG.md) · [Licencia BSD-3-Clause](LICENSE). Los componentes incluidos conservan sus licencias; consulta [NOTICE](NOTICE).

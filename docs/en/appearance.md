@@ -15,4 +15,4 @@ Appearance cycles through auto/light/dark and persists locally. ES/EN uses a mou
 
 Override `--newadmin-*` custom properties in a stylesheet loaded after the engine CSS. Editing compiled gem files makes upgrades difficult; prefer explicit tokens or view overrides. The visual layer uses `.newadmin-*` classes, but test navigation boundaries and overrides when a host has its own assets.
 
-Labels, visible focus, error messages, table headings and mobile reflow are included. Automated Chromium checks are not WCAG certification; assistive-technology and broader browser review remain 1.0 work.
+Labels, visible focus, error messages, table headings and mobile reflow are included. WCAG certification and compatibility with every assistive technology or browser are not claimed.

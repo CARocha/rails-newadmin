@@ -12,3 +12,5 @@ html_theme_options = {
  "light_css_variables": {"color-brand-primary":"#344760","color-background-primary":"#f8f9ff"},
  "dark_css_variables": {"color-brand-primary":"#a8bce0","color-background-primary":"#11161d"},
 }
+
+exclude_patterns = ["contributing.md"]
