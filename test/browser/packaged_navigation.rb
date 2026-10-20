@@ -47,7 +47,9 @@ module PackagedNavigation
               rescue Errno::ECONNREFUSED, EOFError
                 # Wait for this newly spawned fixture server to boot.
               end
-              raise "Navigation fixture failed to boot; inspect #{log_path}" if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+              if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+                raise "Navigation fixture failed to boot; inspect #{log_path}\n#{File.read(log_path).lines.last(35).join}"
+              end
               sleep 0.1
             end
             execute.call([ node, File.join(root, "test/browser/navigation.mjs"), "http://127.0.0.1:#{port}", prefix, credentials, variant ], root)

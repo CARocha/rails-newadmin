@@ -20,7 +20,11 @@ File.open(log_path, "w") do |log|
     stdout, stderr, status = Open3.capture3(environment, *arguments, chdir: directory)
     log.write(stdout)
     log.write(stderr)
-    raise "Smoke command failed; inspect #{log_path}" unless status.success?
+    unless status.success?
+      log.flush
+      details = (stdout + stderr).lines.last(35).join
+      raise "Smoke command failed; inspect #{log_path}\n#{details}"
+    end
   end
   Dir.mktmpdir("rails-newadmin-package-") do |directory|
     package_root = File.join(directory, "packed")
