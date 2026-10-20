@@ -27,3 +27,6 @@ __pycache__/
 /test/dummy/storage/
 **/config/master.key
 **/config/credentials/*.key
+
+# Private local planning notes
+/tasks/

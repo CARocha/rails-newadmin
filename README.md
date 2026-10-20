@@ -39,6 +39,6 @@ npm ci
 npm run build
 ```
 
-See [contributing](docs/en/contributing.md), [security](SECURITY.md), [changelog](CHANGELOG.md) and the [approved plan](tasks/plan.en.md). Production requires a shared atomic rate-limit store and configured email delivery. Host-login integration, advanced exports, bulk operations and uploads are future work. This alpha is not a 1.0 certification.
+See [contributing](docs/en/contributing.md), [security](SECURITY.md), [changelog](CHANGELOG.md) and [current status](STATUS.md). Production requires a shared atomic rate-limit store and configured email delivery. Host-login integration, advanced exports, bulk operations and uploads are future work. This alpha is not a 1.0 certification.
 
 BSD-3-Clause. Vendored components retain their own licenses; see [NOTICE](NOTICE).

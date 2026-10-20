@@ -37,6 +37,6 @@ npm ci
 npm run build
 ```
 
-Consulta [contribución](docs/es/contributing.md), [seguridad](SECURITY.md), [cambios](CHANGELOG.md) y [plan aprobado](tasks/plan.md). Producción requiere un almacén compartido y atómico para limitar intentos y un servicio de correo configurado. La integración con un login existente del host, exportaciones, acciones masivas y archivos quedan para etapas posteriores. Esta alfa no es una certificación 1.0.
+Consulta [contribución](docs/es/contributing.md), [seguridad](SECURITY.md), [cambios](CHANGELOG.md) y [estado actual](STATUS.md). Producción requiere un almacén compartido y atómico para limitar intentos y un servicio de correo configurado. La integración con un login existente del host, exportaciones, acciones masivas y archivos quedan para etapas posteriores. Esta alfa no es una certificación 1.0.
 
 Licencia BSD-3-Clause; dependencias con sus licencias en [NOTICE](NOTICE).
