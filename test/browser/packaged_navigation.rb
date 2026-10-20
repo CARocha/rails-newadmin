@@ -2,9 +2,15 @@ require "socket"
 require "net/http"
 
 module PackagedNavigation
+  def self.node_executable
+    executable = ENV.fetch("PATH", "").split(File::PATH_SEPARATOR).map { |directory| File.expand_path("node", directory) }
+      .find { |path| File.file?(path) && File.executable?(path) }
+    raise "Node required for the browser driver" unless executable
+    executable
+  end
+
   def self.run(root:, host:, ruby:, execute:, production:)
-    node = `command -v node`.strip
-    raise "Node required for the browser driver" if node.empty?
+    node = node_executable
     FileUtils.cp_r(File.join(root, "test/browser/host_app/."), host)
     vendor = File.join(host, "vendor/javascript")
     FileUtils.mkdir_p(vendor)
