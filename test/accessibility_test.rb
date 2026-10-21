@@ -2,6 +2,7 @@ require "test_helper"
 
 class AccessibilityTest < ActionDispatch::IntegrationTest
   def setup
+    Rails.cache.clear
     @user = RailsNewadmin::AdminUser.create!(email_address: "a11y@example.test", password: "twelve words password", staff: true, superuser: true)
     login_admin(@user)
   end

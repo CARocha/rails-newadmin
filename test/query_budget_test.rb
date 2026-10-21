@@ -10,6 +10,7 @@ class QueryBudgetTest < ActionDispatch::IntegrationTest
   end
 
   def setup
+    Rails.cache.clear
     @previous_policy = ArticleResource.policy_name
     @previous_preloads = ArticleResource.preload_names
     ArticleResource.policy "QueryBudgetTest::AssociationPolicy"
